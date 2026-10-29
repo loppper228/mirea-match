@@ -77,10 +77,15 @@ main{flex:1;min-height:0;position:relative}
 .chead{display:flex;align-items:center;gap:12px;padding:6px 0 12px;font-size:18px}
 .chead .av{width:44px;height:44px;font-size:22px}
 .back{width:40px;height:40px;border-radius:50%;background:var(--card);font-size:20px;box-shadow:var(--sh)}
-.msgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:4px 2px 10px}
-.m{max-width:78%;padding:10px 14px;border-radius:20px;line-height:1.35;animation:pop .35s;word-wrap:break-word}
-.m.t{background:var(--card);border-bottom-left-radius:6px;align-self:flex-start;box-shadow:var(--sh)}
-.m.m{background:linear-gradient(135deg,var(--a),var(--b));color:#fff;border-bottom-right-radius:6px;align-self:flex-end}
+.msgs{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding:12px 9px 14px;border-radius:14px;background:color-mix(in srgb,var(--card) 72%,#9db8c8 28%);background-image:radial-gradient(circle at 20% 20%,rgba(120,150,170,.10) 0 2px,transparent 3px),radial-gradient(circle at 80% 70%,rgba(120,150,170,.10) 0 2px,transparent 3px);background-size:36px 36px}
+.m{display:block;width:fit-content;max-width:min(78%,420px);padding:8px 11px 5px;border-radius:16px;line-height:1.38;animation:pop .22s;overflow-wrap:anywhere;white-space:pre-wrap;box-shadow:0 1px 1px rgba(0,0,0,.08);position:relative;font-size:15px}
+.m.t{background:var(--card);border-bottom-left-radius:5px;align-self:flex-start;margin-right:auto;color:var(--text);box-shadow:0 1px 1px rgba(0,0,0,.10)}
+.m.m{background:#d9fdd3;color:#182b20;border-bottom-right-radius:5px;align-self:flex-end;margin-left:auto}
+[data-theme=dark] .m.m{background:#245c4b;color:#f2fff8}
+.mtime{display:block;text-align:right;font-size:10px;line-height:1.2;opacity:.62;margin:3px 0 0 18px;white-space:nowrap}
+.m.m .mtime{color:#2d5c4c}
+[data-theme=dark] .m.m .mtime{color:#d2f4e5}
+.m.t .mtime{color:var(--mut)}
 .ty{display:flex;gap:4px;padding:14px}
 .ty s{width:7px;height:7px;border-radius:50%;background:var(--mut);animation:tp 1s infinite}
 .ty s:nth-child(2){animation-delay:.15s}.ty s:nth-child(3){animation-delay:.3s}
@@ -221,7 +226,7 @@ async function chats(){
 }
 async function openChat(id){cur=id;const p=person(id)||chatProfiles.find(x=>x.id===id);if(!p)return toast('Анкета чата не найдена');if(chatPoll)clearInterval(chatPoll);$('#chav').innerHTML=av(p);$('#chn').textContent=p.n;$('#qr').innerHTML=['👋 Привет!','☕ Кофе после пар?','🏢 Какой корпус лучше?'].map((q,i)=>`<button class='chip' data-q='${i}'>${q}</button>`).join('');go('chat');await loadMessages();chatPoll=setInterval(()=>{if(view==='chat'&&cur===id)loadMessages(true)},4000);setTimeout(()=>$('#inp').focus(),50)}
 async function loadMessages(quiet=false){if(cur==null||chatLoading)return;chatLoading=true;try{const r=await fetch('/api/messages?profileId='+encodeURIComponent(cur),{credentials:'same-origin',cache:'no-store'});const d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось загрузить сообщения');const old=$('#msgs').scrollTop,nearBottom=$('#msgs').scrollHeight-$('#msgs').clientHeight-old<80;S.chats[cur]=d.messages||[];msgs();if(!nearBottom&&!quiet)$('#msgs').scrollTop=$('#msgs').scrollHeight;}catch(e){if(!quiet)toast(e.message||'Ошибка загрузки чата')}finally{chatLoading=false}}
-function msgs(){const m=$('#msgs');m.innerHTML=(S.chats[cur]||[]).map(x=>`<div class="m ${x.w==='m'?'m':'t'}">${esc(x.t)}</div>`).join('')+(ty==cur?'<div class="m t ty"><s></s><s></s><s></s></div>':'');m.scrollTop=m.scrollHeight;}
+function msgs(){const m=$('#msgs');m.innerHTML=(S.chats[cur]||[]).map(x=>{const d=x.createdAt?new Date(x.createdAt):null;const tm=d&&!Number.isNaN(d.getTime())?d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):'';return `<div class="m ${x.w==='m'?'m':'t'}">${esc(x.t)}${tm?`<span class="mtime">${tm}</span>`:''}</div>`}).join('')+(ty==cur?'<div class="m t ty"><s></s><s></s><s></s></div>':'');m.scrollTop=m.scrollHeight;}
 async function send(x){const i=$('#inp'),text=typeof x==='string'?x:i.value.trim();if(!text||cur==null)return;if(text.length>2000)return toast('Максимум 2000 символов');if(typeof x!=='string')i.value='';try{const r=await fetch('/api/messages?profileId='+encodeURIComponent(cur),{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({text})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось отправить сообщение');S.chats[cur]=[...(S.chats[cur]||[]),d.message];msgs();}catch(e){toast(e.message||'Не удалось отправить сообщение')}}
 
 /* разделы лайков: данные берутся с сервера, а не из localStorage */
