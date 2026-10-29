@@ -163,7 +163,7 @@ const card=p=>`<div class="ph ${p.img?'img':''}" style="${bg(p)}">${p.img?'':p.e
 const person=id=>P.find(p=>p.id==id);function comp(p){const m=S.me;if(!m)return 50;const sh=(m.t||[]).filter(t=>p.t.includes(t)).length;return Math.min(99,45+sh*18+(m.c==p.c?14:0)+(m.k==p.k?10:0)+p.id*7%9)}
 
 function go(v){
-  view=v;document.querySelectorAll('.view').forEach(e=>e.classList.toggle('on',e.id=='v-'+v));
+  view=v;if(v!=='chat'&&chatPoll){clearInterval(chatPoll);chatPoll=null;}document.querySelectorAll('.view').forEach(e=>e.classList.toggle('on',e.id=='v-'+v));
   document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.v==v||(v==='likes'&&((likesMode==='received'&&b.dataset.v==='likes-received')||(likesMode==='sent'&&b.dataset.v==='likes-sent')))));
   $('#app').classList.toggle('nonav',['form','chat','auth'].includes(v));
   if(v=='feed')feed();if(v=='chats')chats();if(v=='prof')prof();if(v=='likes')loadLikes();badge();
@@ -199,7 +199,7 @@ async function swipe(y,sup){
   setTimeout(()=>{feed();if(y&&likeResult&&likeResult.mutual)match(p,likeResult.mutualUsername)},420);
 }
 function match(p,mutualUsername){
-  S.matches.push(p.id);S.chats[p.id]=[{w:'t',t:`Привет! Классная анкета 🙂 Ты из корпуса ${C[S.me.c]}, да? Как там у вас?`}];S.unread[p.id]=1;if(S.share&&S.tg)S.chats[p.id].unshift({w:'m',t:'Мой Telegram: @'+S.tg});save();badge();
+  if(!S.matches.includes(p.id))S.matches.push(p.id);save();badge();
   $('#mo').innerHTML=`<div class="mbox"><div class="mt">Это мэтч!</div><p>Вы с ${esc(p.n)} понравились друг другу</p><div class="pair">${av(S.me,'big l')}${av(p,'big r')}</div>${mutualUsername?`<a class="btn" style="text-decoration:none;margin-bottom:8px" href="https://t.me/${encodeURIComponent(mutualUsername)}" target="_blank" rel="noopener noreferrer">✈️ Открыть Telegram @${esc(mutualUsername)}</a>`:`<p style="font-size:13px">У пользователя не указан публичный Telegram username.</p>`}
   <button class="btn" id="mw">Написать сообщение</button><button class="ghost" id="mx">Продолжить</button></div>`;
   $('#mo').classList.add('on');
@@ -209,23 +209,20 @@ function match(p,mutualUsername){
   $('#mw').onclick=()=>{$('#mo').classList.remove('on');openChat(p.id)};
 }
 
-/* чаты */
-function chats(){
-  const l=$('#list');
-  if(!S.matches.length){l.innerHTML='<div class="none">Пока нет мэтчей 💫<br>Ставь лайки — чат откроется, когда симпатия будет взаимной</div>';return}
-  l.innerHTML=[...S.matches].reverse().map((id,i)=>{const p=person(id),m=(S.chats[id]||[]).slice(-1)[0];
-    return `<button class="row" data-id="${id}" style="animation-delay:${i*60}ms">${av(p)}<div><b>${esc(p.n)}</b><small>${m?esc(m.t):'Напиши первым'}</small></div>${S.unread[id]?'<span class="dot"></span>':''}</button>`}).join('');
+/* Чаты: сообщения хранятся в PostgreSQL и доступны обоим участникам мэтча. */
+let chatProfiles=[], chatPoll=null, chatLoading=false;
+async function chats(){
+  const l=$('#list');l.innerHTML='<div class="none">Загружаю чаты…</div>';
+  try{const r=await fetch('/api/chats',{credentials:'same-origin',cache:'no-store'});const d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось загрузить чаты');chatProfiles=Array.isArray(d.chats)?d.chats:[];
+    for(const p of chatProfiles)if(!P.some(x=>x.id===p.id))P.push(p);
+    if(!chatProfiles.length){l.innerHTML='<div class="none">Пока нет взаимных лайков 💫<br>Чат откроется, когда вы понравитесь друг другу.</div>';return;}
+    l.innerHTML=chatProfiles.map((p,i)=>`<button class="row" data-id="${p.id}" style="animation-delay:${i*60}ms">${av(p)}<div><b>${esc(p.n)}</b><small>${esc(p.lastMessage||'Напиши первым')}</small></div></button>`).join('');
+  }catch(e){l.innerHTML=`<div class="none">${esc(e.message||'Не удалось загрузить чаты')}</div>`;}
 }
-function openChat(id){cur=id;delete S.unread[id];save();const p=person(id);
-  $('#chav').innerHTML=av(p);$('#chn').textContent=p.n;$('#qr').innerHTML=['👋 Привет!','☕ Кофе после пар?','🏢 Какой корпус лучше?','✈️ Мой Telegram'].map((q,i)=>`<button class='chip' data-q='${i}'>${q}</button>`).join('');go('chat');msgs();setTimeout(()=>$('#inp').focus(),50)}
-function msgs(){
-  const m=$('#msgs');m.innerHTML=(S.chats[cur]||[]).map(x=>`<div class="m ${x.w}">${esc(x.t)}</div>`).join('')+(ty==cur?'<div class="m t ty"><s></s><s></s><s></s></div>':'');
-  m.scrollTop=m.scrollHeight;
-}
-function push(id,w,t){(S.chats[id]=S.chats[id]||[]).push({w,t});
-  if(w=='t'&&!(view=='chat'&&cur==id)){S.unread[id]=1;badge()}save();if(view=='chat'&&cur==id)msgs()}
-function send(x){const i=$('#inp'),t=typeof x=='string'?x:i.value.trim();if(!t||cur==null)return;i.value='';const id=cur;push(id,'m',t);ty=id;msgs();
-  setTimeout(()=>{ty=null;push(id,'t',R[Math.random()*R.length|0])},1300+Math.random()*900)}
+async function openChat(id){cur=id;const p=person(id)||chatProfiles.find(x=>x.id===id);if(!p)return toast('Анкета чата не найдена');if(chatPoll)clearInterval(chatPoll);$('#chav').innerHTML=av(p);$('#chn').textContent=p.n;$('#qr').innerHTML=['👋 Привет!','☕ Кофе после пар?','🏢 Какой корпус лучше?'].map((q,i)=>`<button class='chip' data-q='${i}'>${q}</button>`).join('');go('chat');await loadMessages();chatPoll=setInterval(()=>{if(view==='chat'&&cur===id)loadMessages(true)},4000);setTimeout(()=>$('#inp').focus(),50)}
+async function loadMessages(quiet=false){if(cur==null||chatLoading)return;chatLoading=true;try{const r=await fetch('/api/messages?profileId='+encodeURIComponent(cur),{credentials:'same-origin',cache:'no-store'});const d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось загрузить сообщения');const old=$('#msgs').scrollTop,nearBottom=$('#msgs').scrollHeight-$('#msgs').clientHeight-old<80;S.chats[cur]=d.messages||[];msgs();if(!nearBottom&&!quiet)$('#msgs').scrollTop=$('#msgs').scrollHeight;}catch(e){if(!quiet)toast(e.message||'Ошибка загрузки чата')}finally{chatLoading=false}}
+function msgs(){const m=$('#msgs');m.innerHTML=(S.chats[cur]||[]).map(x=>`<div class="m ${x.w==='m'?'m':'t'}">${esc(x.t)}</div>`).join('')+(ty==cur?'<div class="m t ty"><s></s><s></s><s></s></div>':'');m.scrollTop=m.scrollHeight;}
+async function send(x){const i=$('#inp'),text=typeof x==='string'?x:i.value.trim();if(!text||cur==null)return;if(text.length>2000)return toast('Максимум 2000 символов');if(typeof x!=='string')i.value='';try{const r=await fetch('/api/messages?profileId='+encodeURIComponent(cur),{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({text})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось отправить сообщение');S.chats[cur]=[...(S.chats[cur]||[]),d.message];msgs();}catch(e){toast(e.message||'Не удалось отправить сообщение')}}
 
 /* разделы лайков: данные берутся с сервера, а не из localStorage */
 async function loadLikes(){
