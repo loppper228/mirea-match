@@ -147,20 +147,7 @@ textarea.fld{resize:none;height:90px}
 const $=s=>document.querySelector(s);
 const C=['Вернадского 78','Стромынка 20','Вернадского 86','Малая Пироговская 1'];const I=['🎮 Игры','🎵 Музыка','⚽ Спорт','💻 Код','📚 Книги','🎬 Кино','✈️ Путешествия','🍕 Еда','🎨 Арт','🏕 Походы'];
 const D=['Информационные системы и технологии','Программная инженерия','Прикладная информатика','Информационная безопасность','Радиотехника','Бизнес-информатика','Управление в технических системах','Химическая технология','Экономика','Реклама и связи с общественностью','Другое'];
-const P=[
-['Алиса',19,0,D[1],2,'Пишу код, пью матчу и ищу напарника для хакатонов 🚀','🦊',330,1],
-['Максим',20,1,D[3],3,'Футбол по вторникам, мемы по средам. Угощу кофе в буфете','🐻',210,1],
-['Ксения',18,2,D[0],1,'Первокурсница, ещё не нашла нужную аудиторию, зато нашла хорошие плейлисты','🐰',20,0],
-['Даниил',21,3,D[4],4,'Паяю, играю на гитаре и спорю о лучших корпусах МИРЭА','🐺',150,1],
-['Полина',19,0,D[5],2,'Люблю настолки, ночные прогулки и дедлайны за час до сдачи','🦄',290,1],
-['Артём',22,1,D[6],5,'Диплом на носу. Ищу того, с кем можно молчать и пить чай','🐼',180,0],
-['Мария',20,2,D[7],3,'Лаборатория днём, танцы вечером. Не путай колбу со стопкой 😄','🦋',45,1],
-['Кирилл',19,3,D[2],2,'Бегаю по утрам, до первой пары успеваю всё. Почти','🦁',100,1],
-['Вика',18,0,D[9],1,'Креативлю, снимаю сторис и коллекционирую стикеры','🐱',340,0],
-['Иван',21,1,D[8],4,'Считаю деньги и звёзды. Зову в планетарий','🦉',240,1],
-['Софья',20,2,D[1],3,'Фронтенд, кофе и вечные правки макета. Зато красиво!','🐙',270,1],
-['Тимур',22,3,D[3],5,'CTF, шахматы и шаурма на Пироговке. Найдём общий язык?','🦅',200,1]
-].map((x,i)=>({id:i+1,n:x[0],a:x[1],c:x[2],d:x[3],k:x[4],b:x[5],e:x[6],h:x[7],l:x[8],t:[...new Set([i%10,(i*3+2)%10,(i*7+5)%10])].map(j=>I[j])}));
+let P=[]; // Загружаются с сервера только анкеты пользователей, прошедших Telegram-авторизацию.
 const R=['Ха, понятно 😄','Расскажи подробнее!','Может, кофе после пар? ☕','Ого, интересно 👀','А ты где обычно обедаешь?','Я за! Когда тебе удобно?','Класс! У нас много общего 🙌'];
 const K='mirea-match-v1';
 const DF=()=>({email:null,out:0,me:null,tg:'',share:0,theme:'',sl:3,likes:0,hist:[],seen:[],matches:[],chats:{},unread:{}});let S=DF(),flt=-1,fk=0,cur=null,ty=null,view='form',F={};
@@ -183,10 +170,14 @@ function go(v){
 function badge(){const n=Object.keys(S.unread).length;$('#bd').hidden=!n;$('#bd').textContent=n}
 
 /* лента */
-function feed(){
+async function refreshProfiles(){
+  try{const r=await fetch('/api/profiles',{credentials:'same-origin',cache:'no-store'});if(!r.ok)throw new Error('Не удалось загрузить анкеты');const d=await r.json();P=Array.isArray(d.profiles)?d.profiles:[];}catch(e){P=[];toast('Не удалось загрузить анкеты. Проверь подключение к серверу.');}
+}
+async function feed(){
+  await refreshProfiles();
   $('#flt').innerHTML=['Все корпуса',...C].map((t,i)=>`<button class="chip ${flt==i-1?'on':''}" data-i="${i-1}">${t}</button>`).join('');
   $('#flk').innerHTML=['Все курсы',1,2,3,4,5,6].map((k,i)=>`<button class='chip ${fk==i?'on':''}' data-k2='${i}'>${i?k+' курс':k}</button>`).join('');const q=P.filter(p=>!S.seen.includes(p.id)&&(flt<0||p.c==flt)&&(!fk||p.k==fk)),d=$('#deck');d.innerHTML='';
-  if(!q.length){d.innerHTML='<div class="empty"><b>😴</b><div>Пока никого нет.<br>Смени корпус или загляни позже</div><button class="chip" id="rp">Показать пропущенных</button></div>';return}
+  if(!q.length){d.innerHTML='<div class="empty"><b>🔒</b><div>Пока нет реальных анкет авторизованных пользователей.<br>Демо-анкеты отключены.</div></div>';return}
   q.slice(0,3).reverse().forEach((p,j,a)=>{const i=a.length-1-j,el=document.createElement('div');
     el.className='card'+(i==0?' pop':'');el.dataset.id=p.id;el.innerHTML=card(p);
     el.style.transform=`translateY(${i*12}px) scale(${1-i*.05})`;if(i==0)drag(el);d.appendChild(el)});
@@ -262,12 +253,12 @@ async function auth(){
     if(!r.ok) throw new Error(data.error||'Неверный код');
     if(S.email!==data.account) S=Object.assign(DF(),{email:data.account});
     S.out=0;save();authToken=null;$('#ac').value='';$('#ac').style.display='none';$('#av').style.display='none';$('#ab').textContent='Получить код в Telegram';hint.textContent='';
-    S.me?go('feed'):form(0);
+    const mr=await fetch('/api/profiles/me',{credentials:'same-origin',cache:'no-store'});const md=await mr.json();if(md.profile){S.me=md.profile;save();go('feed')}else{S.me=null;form(0)}
   }catch(e){shake('#ac');hint.textContent=e.message}
 }
 function tgv(){$('#tgs').innerHTML=S.tg?`<div class='ok'>✓ Привязан: @${esc(S.tg)}</div><div class='tg'><a href='https://t.me/${esc(S.tg)}' target='_blank' rel='noopener' style='display:grid;place-items:center;text-decoration:none;padding:12px 16px'>Открыть</a><button id='tu' style='background:var(--line);color:var(--ink);padding:12px 16px'>Отвязать</button></div>`:`<small style='color:var(--mut)'>Привяжи аккаунт, чтобы делиться им с мэтчами одним нажатием</small><div class='tg'><input class='fld' id='ti' placeholder='@username' maxlength='33'><button id='tb'>Привязать</button></div>`}
 function tgBind(){const u=$('#ti').value.trim().replace('https://t.me/','').replace(/^@/,'');if(!/^[a-zA-Z][a-zA-Z0-9_]{4,31}$/.test(u)){shake('#ti');return toast('Username: 5–32 символов, латиница, цифры и _')}S.tg=u;save();tgv();toast('Telegram привязан ✈️')}
-function prof(){$('#pav').innerHTML=av(S.me);$('#pn').textContent=S.me.n;$('#pm').textContent=S.email;$('#s1').textContent=S.likes;$('#s2').textContent=S.matches.length;$('#s3').textContent=S.sl;$('#pv').innerHTML=`<div class='card' style='transform:none'>${card(S.me)}</div>`;tgv();document.querySelector('[data-sw=share]').classList.toggle('on',!!S.share);document.querySelector('[data-sw=theme]').classList.toggle('on',isDark())}
+function prof(){$('#pav').innerHTML=av(S.me);$('#pn').textContent=S.me.n;$('#pm').textContent=S.email||'Telegram';$('#s1').textContent=S.likes;$('#s2').textContent=S.matches.length;$('#s3').textContent=S.sl;$('#pv').innerHTML=`<div class='card' style='transform:none'>${card(S.me)}</div>`;tgv();document.querySelector('[data-sw=share]').classList.toggle('on',!!S.share);document.querySelector('[data-sw=theme]').classList.toggle('on',isDark())}
 function form(edit){
   F={img:edit?S.me.img:null,c:edit?S.me.c:0,k:edit?S.me.k:1,t:edit?[...(S.me.t||[])]:[]};
   $('#ft').textContent=edit?'Моя анкета':'Создай анкету';
@@ -284,11 +275,14 @@ function photo(){const u=$('#pu');u.style.backgroundImage=F.img?`url(${F.img})`:
 function readPhoto(f,cb){const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{
   const k=Math.min(1,640/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=i.width*k;c.height=i.height*k;
   c.getContext('2d').drawImage(i,0,0,c.width,c.height);cb(c.toDataURL('image/jpeg',.8))};i.src=r.result};r.readAsDataURL(f)}
-function submit(){
+async function submit(){
   const n=$('#fn').value.trim(),a=+$('#fa').value;
-  const bad=!n?'#fn':(a<16||a>40)?'#fa':null;
+  const bad=!n?'#fn':(a<16||a>40)?'#fa':(!F.img?'#pu':null);
+  if(!F.img){toast('Добавь фотографию, чтобы создать анкету 📸');$('#pu').scrollIntoView({behavior:'smooth',block:'center'});return}
   if(bad){const e=$(bad);e.classList.remove('shake');void e.offsetWidth;e.classList.add('shake');e.focus();return}
-  S.me={n,a,c:F.c,k:F.k,d:$('#fd').value,b:$('#fb').value.trim()||'Пока без описания 🙂',img:F.img,t:F.t,h:260};save();go('feed');
+  const profile={n,a,c:F.c,k:F.k,d:$('#fd').value,b:$('#fb').value.trim()||'Пока без описания 🙂',img:F.img,t:F.t,h:260};
+  try{const r=await fetch('/api/profiles/me',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify(profile)});const data=await r.json();if(!r.ok)throw new Error(data.error||'Не удалось сохранить анкету');S.me=data.profile;save();toast('Анкета сохранена для всех пользователей 📸');go('feed');}
+  catch(e){toast(e.message||'Ошибка сохранения анкеты');}
 }
 
 /* события */
@@ -308,7 +302,7 @@ $('#pf').onchange=e=>{const f=e.target.files[0];if(f)readPhoto(f,d=>{F.img=d;pho
 $('#fs').onclick=submit;$('#ed').onclick=()=>form(1);
 $('#rs').onclick=()=>{if(confirm('Удалить анкету, лайки и чаты?')){try{localStorage.removeItem(K)}catch(e){}
   S=Object.assign(DF(),{email:S.email});form(0)}};
-const Q=['Привет! 👋','Кофе после пар? ☕','Какой корпус МИРЭА лучше? 🏢'];if(S.theme)document.documentElement.dataset.theme=S.theme;$('#ab').onclick=auth;$('#av').onclick=auth;$('#ac').onkeydown=e=>{if(e.key=='Enter')auth()};$('#lo').onclick=()=>{S.out=1;save();authToken=null;$('#ac').value='';$('#ac').style.display='none';$('#av').style.display='none';$('#ab').textContent='Получить код в Telegram';$('#authhint').textContent='';go('auth')};for(let i=0;i<14;i++){const s=document.createElement('span');s.className='fl';s.textContent=['♥','✦','♡','✧'][i%4];s.style.cssText=`left:${Math.random()*100}vw;font-size:${14+Math.random()*22}px;animation-duration:${14+Math.random()*16}s;animation-delay:-${Math.random()*20}s;color:var(--${i%2?'a':'b'})`;document.body.prepend(s)}if(S.email&&!S.out)S.me?go('feed'):form(0);else{$('#ae').value=S.email||'';go('auth')}
+const Q=['Привет! 👋','Кофе после пар? ☕','Какой корпус МИРЭА лучше? 🏢'];if(S.theme)document.documentElement.dataset.theme=S.theme;$('#ab').onclick=auth;$('#av').onclick=auth;$('#ac').onkeydown=e=>{if(e.key=='Enter')auth()};$('#lo').onclick=async()=>{try{await fetch('/api/auth/logout',{method:'POST',credentials:'same-origin'})}catch(e){}S=Object.assign(DF(),{out:1});save();authToken=null;$('#ac').value='';$('#ac').style.display='none';$('#av').style.display='none';$('#ab').textContent='Получить код в Telegram';$('#authhint').textContent='';go('auth')};for(let i=0;i<14;i++){const s=document.createElement('span');s.className='fl';s.textContent=['♥','✦','♡','✧'][i%4];s.style.cssText=`left:${Math.random()*100}vw;font-size:${14+Math.random()*22}px;animation-duration:${14+Math.random()*16}s;animation-delay:-${Math.random()*20}s;color:var(--${i%2?'a':'b'})`;document.body.prepend(s)}(async()=>{try{const r=await fetch('/api/profiles/me',{credentials:'same-origin',cache:'no-store'});if(r.ok){const d=await r.json();S.email=S.email||'Telegram';S.me=d.profile||null;S.out=0;save();if(S.me)go('feed');else form(0);return;}}catch(e){}go('auth')})();
 </script>
 </body>
 </html>
