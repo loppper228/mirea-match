@@ -1,23 +1,25 @@
-МИРЭА Match — Telegram авторизация и общие анкеты
+МИРЭА Match — Telegram auth + PostgreSQL profiles and likes
 
-Файлы:
-- МИРЭА_Match_Telegram.html — интерфейс сайта
-- server.js — Node.js сервер, Telegram webhook, API профилей и PostgreSQL
-- package.json — зависимости и команда запуска
+Files:
+- server.js
+- МИРЭА_Match_Telegram.html
+- package.json
 
-Render настройки:
-Build Command: npm install
-Start Command: npm start
-Environment Variables:
-BOT_TOKEN = токен Telegram-бота (секрет)
-BOT_USERNAME = MireaMatchbot
-WEBHOOK_SECRET = то же значение, что использовано при регистрации webhook
-DATABASE_URL = Internal Database URL из PostgreSQL Render
+Render settings:
+- Build Command: npm install
+- Start Command: npm start
 
-PostgreSQL: сервер создаёт таблицу profiles при запуске. Анкеты доступны только авторизованным через Telegram пользователям. Фото обязательно. Профили хранятся в общей базе.
+Environment variables already needed:
+- BOT_TOKEN
+- BOT_USERNAME
+- WEBHOOK_SECRET
+- DATABASE_URL (Internal Database URL of Render PostgreSQL)
 
-Важно:
-- Не публикуйте BOT_TOKEN, DATABASE_URL или WEBHOOK_SECRET.
-- Бесплатная PostgreSQL Render истекает через 30 дней; до истечения экспортируйте данные или перейдите на подходящий постоянный тариф.
-- Сессии хранятся в памяти процесса, поэтому после перезапуска сервера пользователям может потребоваться войти заново.
-- Чаты и лайки пока остаются локальными в браузере; общими являются анкеты.
+The server creates profiles and likes tables automatically on startup.
+Likes are stored in PostgreSQL and the HTML includes two profile sections:
+- Кто тебя лайкнул
+- Кого ты лайкнул
+
+After replacing the files in GitHub, wait for Render auto-deploy or use Manual Deploy -> Deploy latest commit.
+Do not share BOT_TOKEN, WEBHOOK_SECRET, DATABASE_URL, or database passwords.
+Note: the current implementation stores likes and profiles server-side. Chat history/matches are not yet fully synchronized between devices.
