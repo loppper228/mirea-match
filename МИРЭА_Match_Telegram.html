@@ -261,6 +261,38 @@ textarea.fld{resize:none;height:90px}
 .card:not(:last-child) .ph{animation:none}
 body.pz *{animation-play-state:paused!important}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* NEW LOOK */
+:root{--a:#4c6fff;--b:#ff5a8a;--bgm:radial-gradient(60% 40% at 8% 0%,#dbe4ff,transparent),radial-gradient(50% 40% at 100% 12%,#ffe0ec,transparent),#f6f7fd;--card:#fff;--ink:#14172b;--mut:#6b7090;--line:#e7e9f6;--sh:0 10px 30px -14px rgba(30,40,110,.32)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bgm:radial-gradient(60% 40% at 8% 0%,#1d2a66,transparent),radial-gradient(50% 40% at 100% 12%,#4a1d46,transparent),#0a0e1f;--card:#161b33;--ink:#eef0ff;--mut:#9aa1c7;--line:#252c4d;--sh:0 10px 30px -14px #000}}
+:root[data-theme="dark"]{--bgm:radial-gradient(60% 40% at 8% 0%,#1d2a66,transparent),radial-gradient(50% 40% at 100% 12%,#4a1d46,transparent),#0a0e1f;--card:#161b33;--ink:#eef0ff;--mut:#9aa1c7;--line:#252c4d;--sh:0 10px 30px -14px #000}
+.blob{opacity:.18}.fl{opacity:.16}
+.top{padding:12px 20px 4px}.logo{font-size:21px;letter-spacing:-.3px}.logo::after{content:'РТУ МИРЭА';font-size:9px;font-weight:800;letter-spacing:.16em;color:var(--mut);-webkit-text-fill-color:var(--mut);border:1px solid var(--line);padding:3px 7px;border-radius:99px}
+.nav{margin:0 14px calc(10px);padding:6px;border-radius:28px;background:color-mix(in srgb,var(--card) 80%,transparent);backdrop-filter:blur(18px);border:1px solid var(--line)}
+.nav button{padding:8px 0 7px;font-size:10.5px;border-radius:22px}
+.nav button i{display:grid;place-items:center;font-size:0}.nav button svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav button.on{box-shadow:0 8px 18px -8px var(--a)}.nav button.on i{transform:translateY(-1px) scale(1.08)}
+.bd{right:22%}
+.card{border-radius:34px}.shade{background:linear-gradient(rgba(0,0,0,.28),transparent 22%,transparent 42%,rgba(8,10,30,.9))}
+.info{padding:22px}.info h2{font-size:30px;letter-spacing:-.5px}
+.acts{gap:18px;padding:12px 0 14px}.rb{width:62px;height:62px;border:1px solid var(--line)}.rb.sm{width:48px;height:48px}
+.rb.yes{width:72px;height:72px;background:linear-gradient(135deg,var(--a),var(--b));color:#fff;border:0;box-shadow:0 16px 30px -10px var(--b)}
+.rb.no{color:#ff5a6e;width:72px;height:72px}
+.chip{border-radius:14px;font-size:13px;padding:7px 13px}
+.row,.sec,.like-row{border-radius:24px;border:1px solid var(--line)}
+.fld{border-radius:16px}
+.mgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;align-content:start;padding-bottom:12px}.mgrid .none{grid-column:1/-1}
+.mc{position:relative;aspect-ratio:3/4;border-radius:26px;overflow:hidden;background-size:cover;background-position:center;color:#fff;text-align:left;box-shadow:var(--sh);animation:up .4s backwards;transition:transform .2s}.mc:active{transform:scale(.97)}
+.mc .mshade{position:absolute;inset:0;background:linear-gradient(transparent 45%,rgba(8,10,30,.88))}.mc .mi{position:absolute;left:12px;right:12px;bottom:12px;display:grid;gap:2px}.mc .mi b{font-size:16px}.mc .mi small{font-size:11px;opacity:.85}.mc .dot{position:absolute;top:10px;right:10px;margin:0}
+.like-row button{background:linear-gradient(135deg,var(--a),var(--b));color:#fff;padding:9px 12px;border-radius:12px;font-weight:700;font-size:13px;white-space:nowrap}.like-row button:disabled{opacity:.65}
+#v-chat .chead{border-bottom:1px solid var(--line)}
+#v-chat .msgs>.m.t{background:var(--card)!important;color:var(--ink)!important;border-color:var(--line)}
+#v-chat .msgs>.m.m{background:#e3e8ff!important;color:#1a2150!important;border-color:#cdd6ff}
+#v-chat .msgs>.m.m .mtime{color:#6a74a8}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #v-chat .msgs>.m.m{background:#2b3a8a!important;color:#f3f5ff!important;border-color:#3a4aa0}:root:not([data-theme="light"]) #v-chat .msgs>.m.m .mtime{color:rgba(220,226,255,.72)}:root:not([data-theme="light"]) #v-chat .msgs>.m.t{background:#1e2440!important}}
+:root[data-theme="dark"] #v-chat .msgs>.m.m{background:#2b3a8a!important;color:#f3f5ff!important;border-color:#3a4aa0}
+:root[data-theme="dark"] #v-chat .msgs>.m.m .mtime{color:rgba(220,226,255,.72)}
+:root[data-theme="dark"] #v-chat .msgs>.m.t{background:#1e2440!important}
+:root[data-theme="dark"] #v-chat,:root[data-theme="dark"] #v-chat .msgs{background:transparent}
 </style>
 </head>
 <body>
@@ -275,7 +307,8 @@ body.pz *{animation-play-state:paused!important}
 <section class="view" id="v-chat"><div class="chead"><button class="back" id="bk">←</button><div id="chav"></div><b id="chn"></b></div>
 <div class='msgs' id='msgs'></div><div class='qr' id='qr'></div><div class='send'><input id="inp" placeholder="Напиши сообщение…" maxlength="300"><button id="snd">➤</button></div></section>
 <section class='view sc' id='v-prof'><div class='sec'><div class='acc'><div id='pav'></div><div><b id='pn'></b><small id='pm'></small></div></div><div class='stats' style='margin-top:14px'><div><b id='s1'>0</b><small>лайков</small></div><div><b id='s2'>0</b><small>мэтчей</small></div><div><b id='s3'>0</b><small>⭐ осталось</small></div></div></div><div class='sec'><h4>✈️ Telegram</h4><div id='tgs'></div></div><div class='sec'><h4>Настройки</h4><div class='sw' data-sw='share'><span>Делиться Telegram при мэтче</span><i></i></div><div class='sw' data-sw='theme'><span>Тёмная тема</span><i></i></div></div><div class='pv' id='pv'></div><button class='btn' id='ed'>Редактировать анкету</button><button class='ghost' id='lo'>Выйти из аккаунта</button><button class='ghost' id='rs'>Удалить анкету</button></section>
-<section class='view sc' id='v-likes'><div class='chead'><button class='back' id='likes-back'>←</button><b>💗 Симпатии</b></div><div class='like-tabs'><button id='tab-received' class='on'>Кто тебя лайкнул</button><button id='tab-sent'>Кого ты лайкнул</button></div><div id='likes-list'></div></section>
+<section class='view sc' id='v-matches'><h3 class='h'>Мэтчи</h3><div class='mgrid' id='mlist'></div></section>
+<section class='view sc' id='v-likes'><div class='chead'><button class='back' id='likes-back'>←</button><b>Кто тебя лайкнул</b></div><div id='likes-list'></div></section>
 <section class="view" id="v-form"><div class="form">
 <h1 id="ft">Создай анкету</h1><p class="s">Знакомства только для студентов РТУ МИРЭА</p>
 <label class="ph-up" id="pu">+ фото<input type="file" id="pf" accept="image/*" hidden></label>
@@ -287,7 +320,7 @@ body.pz *{animation-play-state:paused!important}
 <span class='lbl'>Интересы (до 3)</span><div class='grid' id='fi'></div><span class="lbl">О себе</span><textarea class="fld" id="fb" maxlength="200" placeholder="Чем увлекаешься, кого ищешь…"></textarea>
 <div style="height:18px"></div><button class="btn" id="fs">Начать знакомиться</button></div></section>
 </main>
-<nav class="nav"><button data-v="feed" class="on"><i>🔥</i>Лента</button><button data-v="likes-received"><i>💗</i>Кто лайкнул</button><button data-v="likes-sent"><i>💌</i>Я лайкнул</button><button data-v="chats"><i>💬</i>Чаты<span class="bd" id="bd" hidden></span></button><button data-v="prof"><i>👤</i>Профиль</button></nav>
+<nav class="nav"><button data-v="feed" class="on"><i><svg viewBox='0 0 24 24'><path d='M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1.1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3a2.5 2.5 0 0 0 2.5 2.5z'/></svg></i><span>Лента</span></button><button data-v="likes-received"><i><svg viewBox='0 0 24 24'><path d='M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7z'/></svg></i><span>Лайки</span></button><button data-v="matches"><i><svg viewBox='0 0 24 24'><path d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'/><circle cx='9' cy='7' r='4'/><path d='M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8'/></svg></i><span>Мэтчи</span></button><button data-v="chats"><i><svg viewBox='0 0 24 24'><path d='M7.9 20A9 9 0 1 0 4 16.1L2 22z'/></svg></i><span>Чаты</span><span class="bd" id="bd" hidden></span></button><button data-v="prof"><i><svg viewBox='0 0 24 24'><path d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg></i><span>Профиль</span></button></nav>
 </div>
 <div id="mo"></div>
 <script>
@@ -310,9 +343,9 @@ const person=id=>P.find(p=>p.id==id);function comp(p){const m=S.me;if(!m)return 
 
 function go(v){
   view=v;if(v!=='chat'&&chatPoll){clearInterval(chatPoll);chatPoll=null;}document.querySelectorAll('.view').forEach(e=>e.classList.toggle('on',e.id=='v-'+v));
-  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.v==v||(v==='likes'&&((likesMode==='received'&&b.dataset.v==='likes-received')||(likesMode==='sent'&&b.dataset.v==='likes-sent')))));
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.v==v||(v==='likes'&&b.dataset.v==='likes-received')));
   $('#app').classList.toggle('nonav',['form','chat','auth'].includes(v));
-  if(v=='feed')feed(true);if(v=='chats')chats();if(v=='prof')prof();if(v=='likes')loadLikes();badge();
+  if(v=='feed')feed(true);if(v=='chats')chats();if(v=='prof')prof();if(v=='likes')loadLikes();if(v=='matches')loadMatches();badge();
 }
 function badge(){const n=Object.keys(S.unread).length;$('#bd').hidden=!n;$('#bd').textContent=n}
 
@@ -376,12 +409,13 @@ async function send(x){const i=$('#inp'),text=typeof x==='string'?x:i.value.trim
 /* разделы лайков: данные берутся с сервера, а не из localStorage */
 async function loadLikes(){
   const box=$('#likes-list');box.innerHTML='<div class="none">Загружаю…</div>';
-  $('#tab-received').classList.toggle('on',likesMode==='received');$('#tab-sent').classList.toggle('on',likesMode==='sent');
+  
   try{const r=await fetch('/api/likes?type='+likesMode,{credentials:'same-origin',cache:'no-store'});const d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось загрузить лайки');const list=Array.isArray(d.profiles)?d.profiles:[];
     if(!list.length){box.innerHTML=`<div class="none">${likesMode==='received'?'Пока никто не лайкнул твою анкету 💗':'Ты пока никого не лайкнул 💌'}</div>`;return;}
-    box.innerHTML=list.map(p=>`<div class="like-row">${av(p)}<div class="meta"><b>${esc(p.n)}, ${p.a}</b><small>${esc(p.d||'')} · ${p.k} курс</small></div><button data-like-open="${p.id}">Анкета</button></div>`).join('');
+    box.innerHTML=list.map(p=>`<div class="like-row">${av(p)}<div class="meta"><b>${esc(p.n)}, ${p.a}</b><small>${esc(p.d||'')} · ${p.k} курс</small></div><button data-like-open="${p.id}">♥ В ответ</button></div>`).join('');
   }catch(e){box.innerHTML=`<div class="none">${esc(e.message||'Ошибка загрузки лайков')}</div>`;}
 }
+async function loadMatches(){const b=$('#mlist');b.innerHTML='<div class="none">Загружаю…</div>';try{const r=await fetch('/api/chats',{credentials:'same-origin',cache:'no-store'});const d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось загрузить мэтчи');chatProfiles=d.chats||[];chatProfiles.forEach(p=>{if(!P.some(x=>x.id===p.id))P.push(p)});S.matches=chatProfiles.map(p=>p.id);S.unread={};chatProfiles.forEach(p=>{if(p.unread)S.unread[p.id]=1});badge();save();if(!chatProfiles.length){b.innerHTML='<div class="none">Пока нет мэтчей 💫<br>Ставь лайки: взаимные симпатии появятся здесь.</div>';return}b.innerHTML=chatProfiles.map((p,i)=>`<button class="mc" data-mid="${p.id}" style="${bg(p)};animation-delay:${i*50}ms"><span class="mshade"></span><span class="mi"><b>${esc(p.n)}, ${p.a}</b><small>${C[p.c]} · ${p.k} курс</small></span>${p.unread?'<span class="dot"></span>':''}</button>`).join('')}catch(e){b.innerHTML=`<div class="none">${esc(e.message)}</div>`}}
 function openLikes(mode){likesMode=mode;go('likes')}
 
 /* профиль и форма */
@@ -447,14 +481,14 @@ async function submit(){
 /* события */
 document.addEventListener('click',e=>{
   const t=e.target.closest('button,label,.sw');if(!t)return;
-  if(t.dataset.v&&S.me){if(t.dataset.v==='likes-received')openLikes('received');else if(t.dataset.v==='likes-sent')openLikes('sent');else go(t.dataset.v);}
+  if(t.dataset.v&&S.me){if(t.dataset.v==='likes-received')openLikes('received');else go(t.dataset.v);}
   else if(t.dataset.i!==undefined&&t.closest('#flt')){flt=+t.dataset.i;feed()}
   else if(t.dataset.c!==undefined){F.c=+t.dataset.c;fchips()}
   else if(t.dataset.k!==undefined){F.k=+t.dataset.k;fchips()}
-  else if(t.classList.contains('row'))openChat(+t.dataset.id);
+  else if(t.classList.contains('row'))openChat(+t.dataset.id);else if(t.dataset.mid)openChat(+t.dataset.mid);
   else if(t.id=='rp'){S.seen=S.matches.slice();save();feed()}else if(t.dataset.k2!==undefined){fk=+t.dataset.k2;feed()}else if(t.dataset.t!==undefined){const v=t.dataset.t;F.t=F.t.includes(v)?F.t.filter(x=>x!=v):F.t.length<3?[...F.t,v]:F.t;fi()}else if(t.dataset.q!==undefined){+t.dataset.q==3?(S.tg?send('Мой Telegram: @'+S.tg):toast('Сначала привяжи Telegram в личном кабинете')):send(Q[+t.dataset.q])}else if(t.dataset.sw){if(t.dataset.sw=='share')S.share=S.share?0:1;else{const d=!isDark();document.documentElement.dataset.theme=S.theme=d?'dark':'light'}save();prof()}else if(t.id=='tb')tgBind();else if(t.id=='tu'){S.tg='';save();tgv()}
 });
-$('#likes-back').onclick=()=>go('feed');$('#tab-received').onclick=()=>{likesMode='received';loadLikes()};$('#tab-sent').onclick=()=>{likesMode='sent';loadLikes()};$('#likes-list').onclick=e=>{const b=e.target.closest('[data-like-open]');if(!b)return;const p=person(+b.dataset.likeOpen);if(p){go('feed');toast('Найди анкету в ленте, чтобы открыть её.');}};$('#bn').onclick=()=>swipe(0);$('#by').onclick=()=>swipe(1);$('#bs').onclick=()=>S.sl>0?swipe(1,1):toast('Суперлайки закончились ⭐');$('#bu').onclick=()=>{const id=S.hist.slice(-1)[0];if(!id||S.matches.includes(id))return toast('Нечего возвращать ↩');S.hist.pop();S.seen=S.seen.filter(x=>x!=id);save();flt=-1;fk=0;feed()};
+$('#likes-back').onclick=()=>go('feed');$('#likes-list').onclick=async e=>{const b=e.target.closest('[data-like-open]');if(!b||b.disabled)return;const id=+b.dataset.likeOpen;b.disabled=true;try{const r=await fetch('/api/likes',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({profileId:id})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось поставить лайк');if(!S.seen.includes(id))S.seen.push(id);save();b.textContent='Мэтч ✓';const p=person(id);if(d.mutual&&p)match(p,d.mutualUsername)}catch(err){b.disabled=false;toast(err.message)}};$('#bn').onclick=()=>swipe(0);$('#by').onclick=()=>swipe(1);$('#bs').onclick=()=>S.sl>0?swipe(1,1):toast('Суперлайки закончились ⭐');$('#bu').onclick=()=>{const id=S.hist.slice(-1)[0];if(!id||S.matches.includes(id))return toast('Нечего возвращать ↩');S.hist.pop();S.seen=S.seen.filter(x=>x!=id);save();flt=-1;fk=0;feed()};
 $('#bk').onclick=()=>{cur=null;go('chats')};$('#snd').onclick=send;
 $('#inp').onkeydown=e=>{if(e.key=='Enter')send()};
 $('#pf').onchange=e=>{const f=e.target.files[0];if(f)readPhoto(f,d=>{F.img=d;photo()})};
