@@ -693,6 +693,9 @@ button,.chip,.rb{touch-action:manipulation}
 @keyframes superParticle{0%{opacity:0;transform:translate(0,0) scale(.15) rotate(0)}20%{opacity:1}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(.25) rotate(230deg)}}
 @keyframes superFxOut{0%,72%{opacity:1}100%{opacity:0}}
 @media(prefers-reduced-motion:reduce){#v-feed .rb.st.super-burst,.super-fx,.super-fx::before,.super-fx .super-badge,.super-fx .super-particle{animation-duration:.01ms!important}}
+
+#likes-list .like-row.superlike{border:1px solid rgba(255,195,90,.5);background:linear-gradient(120deg,color-mix(in srgb,#ffc857 13%,var(--card)),var(--card))}
+#likes-list .superlike-tag{display:inline-flex;align-items:center;padding:3px 7px;margin:0 0 4px;border-radius:99px;background:linear-gradient(135deg,#ffe894,#ffc45a);color:#59380b;font-size:10px;font-weight:850;line-height:1.2;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -802,7 +805,7 @@ async function swipe(y,sup){
   el.style.transition='transform .45s ease-in,opacity .45s';el.style.transform=`translate(${y?700:-700}px,-40px) rotate(${y?30:-30}deg)`;el.style.opacity=0;
   const nx=el.previousElementSibling;if(nx){nx.style.transition='transform .35s';nx.style.transform='none'}
   S.seen.push(id);S.hist.push(id);if(y)S.likes++;if(sup)S.sl--;save();
-  let likeResult=null;if(y&&p){try{const lr=await fetch('/api/likes',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({profileId:id})});likeResult=await lr.json();if(!lr.ok)throw new Error(likeResult.error||'Не удалось сохранить лайк');}catch(e){toast(e.message||'Не удалось сохранить лайк');}}
+  let likeResult=null;if(y&&p){try{const lr=await fetch('/api/likes',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({profileId:id,superlike:!!sup})});likeResult=await lr.json();if(!lr.ok)throw new Error(likeResult.error||'Не удалось сохранить лайк');}catch(e){toast(e.message||'Не удалось сохранить лайк');}}
   setTimeout(()=>{feed();if(y&&likeResult&&likeResult.mutual)match(p,likeResult.mutualUsername)},sup?720:420);
 }
 function match(p,mutualUsername){
@@ -847,7 +850,7 @@ async function loadLikes(){
   
   try{const r=await fetch('/api/likes?type='+likesMode,{credentials:'same-origin',cache:'no-store'});const d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось загрузить лайки');const list=Array.isArray(d.profiles)?d.profiles:[];
     if(!list.length){box.innerHTML=`<div class="none">${likesMode==='received'?'Пока никто не лайкнул твою анкету 💗':'Ты пока никого не лайкнул 💌'}</div>`;return;}
-    box.innerHTML=list.map(p=>`<div class="like-row">${av(p)}<div class="meta"><b>${esc(p.n)}, ${p.a}</b><small>${esc(p.d||'')} · ${p.k} курс</small></div><button data-like-open="${p.id}" ${p.mutual?'disabled aria-label="Вы уже мэтч"':''}>${p.mutual?'Мэтч ✓':'♥ В ответ'}</button></div>`).join('');
+    box.innerHTML=list.map(p=>`<div class="like-row ${p.superlike?'superlike':''}">${av(p)}<div class="meta"><b>${esc(p.n)}, ${p.a}</b><small>${p.superlike?'<span class="superlike-tag">⭐ Суперлайк</span> ':''}${esc(p.d||'')} · ${p.k} курс</small></div><button data-like-open="${p.id}" ${p.mutual?'disabled aria-label="Вы уже мэтч"':''}>${p.mutual?'Мэтч ✓':'♥ В ответ'}</button></div>`).join('');
   }catch(e){box.innerHTML=`<div class="none">${esc(e.message||'Ошибка загрузки лайков')}</div>`;}
 }
 async function loadMatches(){const b=$('#mlist');b.innerHTML='<div class="none">Загружаю…</div>';try{const r=await fetch('/api/chats',{credentials:'same-origin',cache:'no-store'});const d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось загрузить мэтчи');chatProfiles=d.chats||[];chatProfiles.forEach(p=>{if(!P.some(x=>x.id===p.id))P.push(p)});S.matches=chatProfiles.map(p=>p.id);S.unread={};chatProfiles.forEach(p=>{if(p.unread)S.unread[p.id]=1});badge();save();if(!chatProfiles.length){b.innerHTML='<div class="none">Пока нет мэтчей 💫<br>Ставь лайки: взаимные симпатии появятся здесь.</div>';return}b.innerHTML=chatProfiles.map((p,i)=>`<button class="mc" data-mid="${p.id}" style="${bg(p)};animation-delay:${i*50}ms"><span class="mshade"></span><span class="mi"><b>${esc(p.n)}, ${p.a}</b><small>${C[p.c]} · ${p.k} курс</small></span>${p.unread?'<span class="dot"></span>':''}</button>`).join('')}catch(e){b.innerHTML=`<div class="none">${esc(e.message)}</div>`}}
