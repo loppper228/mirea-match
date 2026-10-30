@@ -571,8 +571,10 @@ button,.chip,.rb{touch-action:manipulation}
 #v-prof .profile-heading{display:flex;align-items:center;justify-content:space-between;padding:1px 2px 13px}
 #v-prof .profile-heading small{display:block;margin-bottom:3px;color:var(--mut);font-size:10px;font-weight:800;letter-spacing:.14em}
 #v-prof .profile-heading h1{font-size:27px;line-height:1.1;font-weight:850;letter-spacing:-.7px;color:var(--ink)}
-#v-prof .profile-pill{display:flex;align-items:center;gap:7px;padding:8px 11px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--mut);font-size:11px;font-weight:700}
-#v-prof .profile-pill i{width:7px;height:7px;border-radius:50%;background:#70c99a;box-shadow:0 0 0 3px rgba(112,201,154,.13)}
+#v-prof .profile-logout{display:flex;align-items:center;gap:6px;padding:9px 12px;border:1px solid var(--line);border-radius:13px;background:var(--card);color:var(--mut);font-size:12px;font-weight:750;white-space:nowrap;transition:transform .18s,border-color .18s,color .18s}
+#v-prof .profile-logout:active{transform:scale(.96)}
+#v-prof .profile-logout svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#v-prof .profile-actions{display:flex;justify-content:flex-end;align-items:center;gap:10px;padding:3px 3px 22px}
 #v-prof .profile-hero{flex:none;padding:18px 17px 13px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(145deg,var(--card),color-mix(in srgb,var(--a) 12%,var(--card)));box-shadow:0 12px 28px rgba(0,0,0,.12)}
 #v-prof .profile-identity{display:flex;align-items:center;gap:14px;min-width:0}
 #v-prof .profile-avatar{width:76px;height:76px;font-size:34px;border:3px solid color-mix(in srgb,var(--a) 64%,transparent)!important;box-shadow:0 0 0 4px color-mix(in srgb,var(--a) 14%,transparent)!important}
@@ -605,7 +607,6 @@ button,.chip,.rb{touch-action:manipulation}
 #v-prof .pv .bio{font-size:12px;line-height:1.3}
 #v-prof .pv .mp{top:11px;padding:5px 10px;font-size:12px}
 #v-prof .profile-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:3px 3px 22px}
-#v-prof .profile-actions .ghost{width:auto;padding:10px 0;color:var(--mut);font-size:13px}
 #v-prof .profile-delete{padding:10px 0;color:#e47771;font-size:13px;font-weight:700}
 :root[data-theme="day"] #v-prof .profile-hero{box-shadow:0 12px 28px rgba(95,54,35,.08)}
 :root[data-theme="day"] #v-prof .profile-delete{color:#bd5149}
@@ -624,7 +625,7 @@ button,.chip,.rb{touch-action:manipulation}
 <section class="view" id="v-chat"><div class="chead"><button class="back" id="bk">←</button><div id="chav"></div><div class="chat-who"><b id="chn"></b><small class="presence" id="presence"></small></div><a class="chat-tg" id="chat-tg" href="#" target="_blank" rel="noopener noreferrer" aria-label="Написать в Telegram" title="Написать в Telegram" hidden>✈</a></div>
 <div class='msgs' id='msgs'></div><div class='qr' id='qr'></div><div class='send'><input id="inp" placeholder="Напиши сообщение…" maxlength="300"><button id="snd">➤</button></div></section>
 <section class='view sc' id='v-prof'>
-<div class='profile-heading'><div><small>ТВОЯ АНКЕТА</small><h1>Профиль</h1></div><span class='profile-pill'><i></i>Аккаунт активен</span></div>
+<div class='profile-heading'><div><small>ТВОЯ АНКЕТА</small><h1>Профиль</h1></div><button class='profile-logout' id='lo' aria-label='Выйти из аккаунта'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M10 17l5-5-5-5'/><path d='M15 12H3'/><path d='M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6'/></svg><span>Выйти</span></button></div>
 <div class='profile-hero'>
 <div class='profile-identity'><div id='pav'></div><div class='profile-name'><b id='pn'></b><small id='pm'></small></div></div>
 <div class='stats profile-stats'><div><b id='s1'>0</b><small>лайков</small></div><div><b id='s2'>0</b><small>мэтчей</small></div><div><b id='s3'>0</b><small>⭐ осталось</small></div></div>
@@ -633,7 +634,7 @@ button,.chip,.rb{touch-action:manipulation}
 <div class='profile-section sec'><div class='profile-section-title'><div><h3>Настройки</h3><small>Внешний вид приложения</small></div></div><div class='sw profile-theme' data-sw='theme'><span><b>Тёмная тема</b><small>Комфортный режим для вечера</small></span><i></i></div></div>
 <div class='profile-preview-title'><div><h3>Анкета в ленте</h3><small>Так тебя видят другие</small></div><span>ПРЕДПРОСМОТР</span></div>
 <div class='pv' id='pv'></div>
-<div class='profile-actions'><button class='ghost' id='lo'>Выйти из аккаунта</button><button class='profile-delete' id='rs'>Удалить анкету</button></div>
+<div class='profile-actions'><button class='profile-delete' id='rs'>Удалить анкету</button></div>
 </section>
 <section class='view sc' id='v-matches'><h3 class='h'>Мэтчи</h3><div class='mgrid' id='mlist'></div></section>
 <section class='view sc' id='v-likes'><div class='chead'><button class='back' id='likes-back'>←</button><b>Кто тебя лайкнул</b></div><div id='likes-list'></div></section>
