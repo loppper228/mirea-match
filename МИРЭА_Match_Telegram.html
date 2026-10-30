@@ -784,7 +784,7 @@ async function auth(){
     const mr=await fetch('/api/profiles/me',{credentials:'same-origin',cache:'no-store'});const md=await mr.json();pingPresence();if(md.profile){S.me=md.profile;save();go('feed')}else{S.me=null;form(0)}
   }catch(e){shake('#ac');hint.textContent=e.message}
 }
-function prof(){$('#pav').innerHTML=av(S.me,'big profile-avatar');$('#pn').textContent=S.me.n;const account=S.email||'Telegram';$('#pm').textContent=account.startsWith('tg:')?'ID Telegram: '+account.slice(3):account==='Telegram'?'ID Telegram не найден':account;$('#s1').textContent=S.likes;$('#s2').textContent=S.matches.length;$('#s3').textContent=S.sl;$('#pv').innerHTML=`<div class='card' style='transform:none'>${card(S.me)}</div>`;document.querySelector('[data-sw=theme]').classList.toggle('on',isDark())}
+function prof(){$('#pav').innerHTML=av(S.me,'big profile-avatar');$('#pn').textContent=S.me.n;const account=S.email||'Telegram',tgUser=String(S.telegramUsername||'').replace(/^@/,'').trim();$('#pm').textContent=account.startsWith('tg:')?(tgUser?'@'+tgUser:'ID Telegram: '+account.slice(3)):account==='Telegram'?'ID Telegram не найден':account;$('#s1').textContent=S.likes;$('#s2').textContent=S.matches.length;$('#s3').textContent=S.sl;$('#pv').innerHTML=`<div class='card' style='transform:none'>${card(S.me)}</div>`;document.querySelector('[data-sw=theme]').classList.toggle('on',isDark())}
 function form(edit){
   F={img:edit?S.me.img:null,c:edit?S.me.c:0,k:edit?S.me.k:1,t:edit?[...(S.me.t||[])]:[]};
   $('#ft').textContent=edit?'Моя анкета':'Создай анкету';
@@ -840,7 +840,7 @@ document.addEventListener('click',e=>{const a=e.target.closest('a[href^="https:/
 async function pollUnread(){if(document.hidden||!S.me||view==='chat')return;try{const r=await fetch('/api/chats',{credentials:'same-origin',cache:'no-store'});if(!r.ok)return;const d=await r.json();S.unread={};(d.chats||[]).forEach(p=>{if(p.unread)S.unread[p.id]=1});badge()}catch(e){}}
 setInterval(pollUnread,30000);setInterval(pingPresence,30000);
 document.addEventListener('visibilitychange',()=>{document.body.classList.toggle('pz',document.hidden);if(document.hidden)flush();else{pingPresence();if(view==='chat'&&cur!=null){loadMessages(true);refreshPeerPresence(cur)}}});
-(async()=>{if(TG)try{const ar=await fetch('/api/auth/webapp',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({initData:TG.initData})});if(ar.ok){const ad=await ar.json();if(ad.account)S.email=ad.account}}catch(e){}try{const r=await fetch('/api/profiles/me',{credentials:'same-origin',cache:'no-store'});if(r.ok){const d=await r.json();S.email=S.email||'Telegram';S.me=d.profile||null;S.out=0;save();pingPresence();if(S.me){go('feed');pollUnread()}else form(0);return;}}catch(e){}go('auth')})();
+(async()=>{if(TG)try{const ar=await fetch('/api/auth/webapp',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({initData:TG.initData})});if(ar.ok){const ad=await ar.json();if(ad.account)S.email=ad.account;S.telegramUsername=ad.username||''}}catch(e){}try{const r=await fetch('/api/profiles/me',{credentials:'same-origin',cache:'no-store'});if(r.ok){const d=await r.json();S.email=S.email||'Telegram';S.me=d.profile||null;S.out=0;save();pingPresence();if(S.me){go('feed');pollUnread()}else form(0);return;}}catch(e){}go('auth')})();
 </script>
 </body>
 </html>
