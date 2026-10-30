@@ -690,7 +690,7 @@ button,.chip,.rb{touch-action:manipulation}
 .super-fx .super-particle{position:absolute;left:50%;top:44%;color:#ffe47c;font-style:normal;font-size:23px;text-shadow:0 2px 10px rgba(255,178,40,.7);animation:superParticle .72s cubic-bezier(.15,.65,.2,1) var(--delay) both}
 @keyframes superFlash{0%{opacity:0;transform:scale(.3)}25%{opacity:1;transform:scale(1.05)}100%{opacity:0;transform:scale(1.5)}}
 @keyframes superBadge{0%{opacity:0;scale:.15;rotate:-22deg}28%{opacity:1;scale:1.16;rotate:8deg}50%{scale:.94;rotate:-4deg}72%{opacity:1;scale:1;rotate:0}100%{opacity:0;scale:1.35;translate:0 -10px}}
-@keyframes superParticle{0%{opacity:0;transform:translate(0,0) scale(.15) rotate(0)}25%{opacity:1;transform:translate(calc(var(--x)*.35),calc(var(--y)*.35)) scale(1.2) rotate(70deg)}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(.25) rotate(230deg)}}
+@keyframes superParticle{0%{opacity:0;transform:translate(0,0) scale(.15) rotate(0)}20%{opacity:1}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(.25) rotate(230deg)}}
 @keyframes superFxOut{0%,72%{opacity:1}100%{opacity:0}}
 @media(prefers-reduced-motion:reduce){#v-feed .rb.st.super-burst,.super-fx,.super-fx::before,.super-fx .super-badge,.super-fx .super-particle{animation-duration:.01ms!important}}
 </style>
