@@ -475,6 +475,25 @@ button,.chip,.rb{touch-action:manipulation}
 .nav button[data-v="feed"] i{transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .22s ease}
 .nav button[data-v="feed"]:active i{transform:scale(.92)}
 @media(prefers-reduced-motion:reduce){#v-feed.on .acts .rb{animation:none}}
+
+/* Bottom nav reference finish */
+.nav{position:relative;z-index:2;display:flex;align-items:flex-end;gap:2px;width:100%;min-height:88px;margin:4px 0 0;padding:8px 7px calc(9px + env(safe-area-inset-bottom,0px));overflow:visible;border:1px solid rgba(255,195,160,.12);border-bottom:0;border-radius:26px 26px 0 0;background:#241a23;box-shadow:0 -8px 26px rgba(0,0,0,.2);backdrop-filter:blur(18px)}
+.nav button{position:relative;display:flex;flex:1;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;min-width:0;padding:0 1px 2px;border:0;border-radius:0;background:transparent;box-shadow:none;color:#b9a5a0;font-size:10px;font-weight:650;line-height:1.15;overflow:visible;transition:color .2s ease,transform .2s cubic-bezier(.2,.8,.2,1)}
+.nav button i{display:grid;place-items:center;width:44px;height:30px;margin:0;border-radius:0;background:transparent;color:inherit;box-shadow:none;font-style:normal;font-size:19px;transition:transform .2s cubic-bezier(.2,.8,.2,1),color .2s ease,background .2s ease}
+.nav button i svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav button.on:not([data-v="feed"]){background:transparent;color:#ffc09b}
+.nav button.on:not([data-v="feed"]) i{background:transparent;color:inherit;box-shadow:none;transform:none}
+.nav button.on:not([data-v="feed"]) i svg{stroke:currentColor}
+.nav button[data-v="feed"]{z-index:3;transform:translateY(-19px);color:#ffc09b}
+.nav button[data-v="feed"] i{width:58px;height:58px;margin-top:-26px;border-radius:50%;background:#ffc09b;color:#321a16;box-shadow:0 0 0 6px #241a23,0 8px 20px rgba(255,145,110,.2);transform:none}
+.nav button[data-v="feed"] i svg{width:25px;height:25px;stroke:#321a16;stroke-width:2.2}
+.nav button[data-v="feed"] span{font-weight:800}
+.nav button[data-v="feed"]:active{transform:translateY(-16px) scale(.95)}
+.nav button[data-v="feed"]:active i{transform:scale(.92)}
+.nav button:not([data-v="feed"]):active{transform:scale(.94)}
+.nav button:not([data-v="feed"]):active i{transform:scale(.9)}
+@media(max-width:360px){.nav{min-height:84px;padding-left:4px;padding-right:4px}.nav button{font-size:9px}.nav button[data-v="feed"] i{width:54px;height:54px}}
+@media(prefers-reduced-motion:reduce){.nav button,.nav button i{transition:none}}
 </style>
 </head>
 <body>
