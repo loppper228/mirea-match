@@ -549,6 +549,12 @@ button,.chip,.rb{touch-action:manipulation}
 :root[data-theme="day"] .toast{background:#fffaf6;color:#35221c;border-color:rgba(150,80,50,.16)}
 :root[data-theme="day"] .filter-backdrop{background:rgba(66,38,28,.4)}
 @media(max-width:600px){:root[data-theme="day"] .nav{background:rgba(255,250,246,.98)}}
+
+/* Telegram shortcut in the matched chat header */
+#v-chat .chat-tg{flex:0 0 40px;width:40px;height:40px;margin-left:auto;display:grid;place-items:center;border:1px solid rgba(255,195,160,.16);border-radius:50%;background:#241a23;color:#ffc09b;text-decoration:none;font-size:19px;line-height:1;transition:transform .18s,background .18s}
+#v-chat .chat-tg:active{transform:scale(.92)}
+#v-chat .chat-tg[hidden]{display:none!important}
+:root[data-theme="day"] #v-chat .chat-tg{background:#fff1e6;border-color:rgba(150,80,50,.16);color:#a9583b}
 </style>
 </head>
 <body>
@@ -560,7 +566,7 @@ button,.chip,.rb{touch-action:manipulation}
 <section class='view' id='v-auth'><div class='auth'><div class='big'>✈️</div><h1>Вход через Telegram</h1><p style='color:var(--mut);margin:6px 0 20px'>Нажми кнопку, открой нашего бота и нажми Start — он пришлёт код для входа.</p><button class='btn' id='ab'>Получить код в Telegram</button><input class='fld' id='ac' inputmode='numeric' maxlength='6' placeholder='Код из Telegram' style='margin-top:12px;display:none;text-align:center;letter-spacing:6px;font-size:20px'><div style='height:14px'></div><button class='ghost' id='av' style='display:none'>Подтвердить код</button><p id='authhint' style='color:var(--mut);margin-top:12px;font-size:13px'></p></div></section><section class="view" id="v-feed"><button class="filterbar" id="filter-toggle" aria-label="Открыть фильтры"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10m-7 6h4"/></svg><span id="filter-label">Все корпуса · Все курсы</span><svg class="filter-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button><div class="deck" id="deck"></div>
 <div class='acts'><button class='rb sm' id='bu'>↩</button><button class='rb no' id='bn'>✕</button><button class='rb st sm' id='bs'>⭐</button><button class='rb yes' id='by'>♥</button></div></section>
 <section class="view" id="v-chats"><h3 class="h">Чаты</h3><div id="list"></div></section>
-<section class="view" id="v-chat"><div class="chead"><button class="back" id="bk">←</button><div id="chav"></div><b id="chn"></b></div>
+<section class="view" id="v-chat"><div class="chead"><button class="back" id="bk">←</button><div id="chav"></div><b id="chn"></b><a class="chat-tg" id="chat-tg" href="#" target="_blank" rel="noopener noreferrer" aria-label="Написать в Telegram" title="Написать в Telegram" hidden>✈</a></div>
 <div class='msgs' id='msgs'></div><div class='qr' id='qr'></div><div class='send'><input id="inp" placeholder="Напиши сообщение…" maxlength="300"><button id="snd">➤</button></div></section>
 <section class='view sc' id='v-prof'><div class='sec'><div class='acc'><div id='pav'></div><div><b id='pn'></b><small id='pm'></small></div></div><div class='stats' style='margin-top:14px'><div><b id='s1'>0</b><small>лайков</small></div><div><b id='s2'>0</b><small>мэтчей</small></div><div><b id='s3'>0</b><small>⭐ осталось</small></div></div></div><div class='sec'><h4>Настройки</h4><div class='sw' data-sw='theme'><span>Тёмная тема</span><i></i></div></div><div class='pv' id='pv'></div><button class='btn' id='ed'>Редактировать анкету</button><button class='ghost' id='lo'>Выйти из аккаунта</button><button class='ghost' id='rs'>Удалить анкету</button></section>
 <section class='view sc' id='v-matches'><h3 class='h'>Мэтчи</h3><div class='mgrid' id='mlist'></div></section>
@@ -635,6 +641,7 @@ async function swipe(y,sup){
   setTimeout(()=>{feed();if(y&&likeResult&&likeResult.mutual)match(p,likeResult.mutualUsername)},420);
 }
 function match(p,mutualUsername){
+  if(p&&mutualUsername)p.telegramUsername=mutualUsername;
   if(!S.matches.includes(p.id))S.matches.push(p.id);save();badge();
   $('#mo').innerHTML=`<div class="mbox"><div class="mt">Это мэтч!</div><p>Вы с ${esc(p.n)} понравились друг другу</p><div class="pair">${av(S.me,'big l')}${av(p,'big r')}</div>${mutualUsername?`<a class="btn" style="text-decoration:none;margin-bottom:8px" href="https://t.me/${encodeURIComponent(mutualUsername)}" target="_blank" rel="noopener noreferrer">✈️ Открыть Telegram @${esc(mutualUsername)}</a>`:`<p style="font-size:13px">У пользователя не указан публичный Telegram username.</p>`}
   <button class="btn" id="mw">Написать сообщение</button><button class="ghost" id="mx">Продолжить</button></div>`;
@@ -656,7 +663,7 @@ async function chats(){
   }catch(e){l.innerHTML=`<div class="none">${esc(e.message||'Не удалось загрузить чаты')}</div>`;}
 }
 let msgSig='',msgCur=null,shown=0,shownFor=null;
-async function openChat(id){cur=id;const p=person(id)||chatProfiles.find(x=>x.id===id);if(!p)return toast('Анкета чата не найдена');if(chatPoll)clearInterval(chatPoll);msgSig='';delete S.unread[id];badge();$('#chav').innerHTML=av(p);$('#chn').textContent=p.n;$('#qr').innerHTML=['👋 Привет!','☕ Кофе после пар?','🏢 Какой корпус лучше?'].map((q,i)=>`<button class='chip' data-q='${i}'>${q}</button>`).join('');go('chat');await loadMessages();chatPoll=setInterval(()=>{if(view==='chat'&&cur===id&&!document.hidden)loadMessages(true)},3000);setTimeout(()=>$('#inp').focus(),50)}
+async function openChat(id){cur=id;const p=chatProfiles.find(x=>x.id===id)||person(id);if(!p)return toast('Анкета чата не найдена');if(chatPoll)clearInterval(chatPoll);msgSig='';delete S.unread[id];badge();$('#chav').innerHTML=av(p);$('#chn').textContent=p.n;const tgLink=$('#chat-tg');if(p.telegramUsername){tgLink.href='https://t.me/'+encodeURIComponent(p.telegramUsername);tgLink.hidden=false}else{tgLink.removeAttribute('href');tgLink.hidden=true}$('#qr').innerHTML=['👋 Привет!','☕ Кофе после пар?','🏢 Какой корпус лучше?'].map((q,i)=>`<button class='chip' data-q='${i}'>${q}</button>`).join('');go('chat');await loadMessages();chatPoll=setInterval(()=>{if(view==='chat'&&cur===id&&!document.hidden)loadMessages(true)},3000);setTimeout(()=>$('#inp').focus(),50)}
 async function loadMessages(quiet=false){if(cur==null||chatLoading)return;chatLoading=true;const id=cur;try{const vis=document.visibilityState==='visible';const r=await fetch('/api/messages?profileId='+encodeURIComponent(id)+(vis?'&read=1':'')+(msgSig&&msgCur===id?'&sig='+encodeURIComponent(msgSig):''),{credentials:'same-origin',cache:'no-store'});const d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось загрузить сообщения');if(cur!==id||d.same)return;msgSig=d.sig;msgCur=id;S.chats[id]=d.messages||[];msgs();}catch(e){if(!quiet)toast(e.message||'Ошибка загрузки чата')}finally{chatLoading=false}}
 function msgs(){const m=$('#msgs'),L=S.chats[cur]||[];if(shownFor!==cur){shownFor=cur;shown=L.length}const stick=!m.childElementCount||m.scrollHeight-m.clientHeight-m.scrollTop<90;
   m.innerHTML=L.map((x,i)=>{const mine=x.mine===true||x.w==='m';const d=x.createdAt?new Date(x.createdAt):null;const tm=d&&!Number.isNaN(d.getTime())?d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):'';const rd=!!x.readAt;return `<div class="m ${mine?'m':'t'} ${mine?'outgoing':'incoming'}${i>=shown?' nw':''}" data-message-side="${mine?'outgoing':'incoming'}">${esc(x.t)}${tm?`<span class="mtime">${tm}${mine?`<span class="receipt ${rd?'read':''}" title="${rd?'Прочитано':'Отправлено'}">${rd?'✓✓':'✓'}</span>`:''}</span>`:''}</div>`}).join('');
