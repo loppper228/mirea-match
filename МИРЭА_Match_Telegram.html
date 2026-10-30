@@ -654,6 +654,28 @@ button,.chip,.rb{touch-action:manipulation}
 #v-form .bio-count.limit{color:#e47771}
 #v-form #fs{margin-top:4px}
 @media(max-width:360px){#v-form .edit-section{padding:13px}#v-form .edit-fields{grid-template-columns:minmax(0,1fr) 82px}}
+
+#v-chat .chat-options{flex:0 0 36px;width:36px;height:40px;margin-left:2px;display:grid;place-items:center;border:0;border-radius:12px;background:transparent;color:var(--mut);font-size:25px;font-weight:800;line-height:1}
+#v-chat .chat-options:active{background:color-mix(in srgb,var(--a) 12%,transparent);transform:scale(.94)}
+.safety-overlay{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;padding:14px;background:rgba(8,6,10,.62);backdrop-filter:blur(5px)}
+.safety-overlay[hidden],#report-options[hidden],#safety-main[hidden]{display:none!important}
+.safety-sheet{width:min(480px,100%);padding:20px 18px max(20px,env(safe-area-inset-bottom,0px));border:1px solid var(--line);border-radius:24px;background:var(--card);color:var(--ink);box-shadow:0 24px 70px rgba(0,0,0,.35);animation:up .22s}
+.safety-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.safety-head small{color:var(--mut);font-size:10px;font-weight:800;letter-spacing:.14em}
+.safety-head h2{margin-top:3px;font-size:19px}
+.safety-close{width:38px;height:38px;border-radius:12px;background:var(--bg);font-size:25px;color:var(--mut)}
+.safety-option{display:flex;align-items:center;gap:12px;width:100%;padding:13px 12px;margin-top:8px;border:1px solid var(--line);border-radius:16px;background:var(--bg);text-align:left}
+.safety-symbol{width:38px;height:38px;display:grid;place-items:center;flex:none;border-radius:12px;background:color-mix(in srgb,var(--a) 14%,var(--card));color:var(--a);font-size:20px}
+.safety-option>span:nth-child(2){display:grid;gap:3px;flex:1}
+.safety-option b{font-size:14px}
+.safety-option small{color:var(--mut);font-size:12px}
+.safety-option>i{font-style:normal;color:var(--mut);font-size:22px}
+.safety-option.danger .safety-symbol{background:rgba(228,119,113,.13);color:#d85f59}
+.safety-option.danger b{color:#d85f59}
+.safety-prompt{margin:0 0 10px;color:var(--mut);font-size:13px}
+.safety-reason{display:block;width:100%;padding:13px 12px;margin-top:7px;border:1px solid var(--line);border-radius:13px;background:var(--bg);text-align:left;font-size:14px}
+.safety-reason:active,.safety-option:active{transform:scale(.985)}
+.safety-back{margin-top:12px;padding:10px 2px;color:var(--mut);font-weight:700}
 </style>
 </head>
 <body>
@@ -665,7 +687,7 @@ button,.chip,.rb{touch-action:manipulation}
 <section class='view' id='v-auth'><div class='auth'><div class='big'>✈️</div><h1>Вход через Telegram</h1><p style='color:var(--mut);margin:6px 0 20px'>Нажми кнопку, открой нашего бота и нажми Start — он пришлёт код для входа.</p><button class='btn' id='ab'>Получить код в Telegram</button><input class='fld' id='ac' inputmode='numeric' maxlength='6' placeholder='Код из Telegram' style='margin-top:12px;display:none;text-align:center;letter-spacing:6px;font-size:20px'><div style='height:14px'></div><button class='ghost' id='av' style='display:none'>Подтвердить код</button><p id='authhint' style='color:var(--mut);margin-top:12px;font-size:13px'></p></div></section><section class="view" id="v-feed"><button class="filterbar" id="filter-toggle" aria-label="Открыть фильтры"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10m-7 6h4"/></svg><span id="filter-label">Все корпуса · Все курсы</span><svg class="filter-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button><div class="deck" id="deck"></div>
 <div class='acts'><button class='rb sm' id='bu'>↩</button><button class='rb no' id='bn'>✕</button><button class='rb st sm' id='bs'>⭐</button><button class='rb yes' id='by'>♥</button></div></section>
 <section class="view" id="v-chats"><h3 class="h">Чаты</h3><div id="list"></div></section>
-<section class="view" id="v-chat"><div class="chead"><button class="back" id="bk">←</button><div id="chav"></div><div class="chat-who"><b id="chn"></b><small class="presence" id="presence"></small></div><a class="chat-tg" id="chat-tg" href="#" target="_blank" rel="noopener noreferrer" aria-label="Написать в Telegram" title="Написать в Telegram" hidden><svg class="telegram-mark" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="tg-blue" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#55b6ff"/><stop offset="1" stop-color="#0878f9"/></linearGradient></defs><circle cx="12" cy="12" r="11.5" fill="url(#tg-blue)"/><path fill="#fff" d="M17.562 8.167l-1.9 8.953c-.14.636-.518.795-1.046.495l-2.89-2.128-1.398 1.345c-.154.154-.286.286-.585.286l.21-2.947 5.367-4.848c.234-.21-.05-.326-.36-.117L8.33 13.38l-2.855-.893c-.622-.194-.636-.622.132-.922l11.157-4.305c.519-.197.972.13.809.907z"/></svg></a></div>
+<section class="view" id="v-chat"><div class="chead"><button class="back" id="bk">←</button><div id="chav"></div><div class="chat-who"><b id="chn"></b><small class="presence" id="presence"></small></div><a class="chat-tg" id="chat-tg" href="#" target="_blank" rel="noopener noreferrer" aria-label="Написать в Telegram" title="Написать в Telegram" hidden><svg class="telegram-mark" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="tg-blue" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#55b6ff"/><stop offset="1" stop-color="#0878f9"/></linearGradient></defs><circle cx="12" cy="12" r="11.5" fill="url(#tg-blue)"/><path fill="#fff" d="M17.562 8.167l-1.9 8.953c-.14.636-.518.795-1.046.495l-2.89-2.128-1.398 1.345c-.154.154-.286.286-.585.286l.21-2.947 5.367-4.848c.234-.21-.05-.326-.36-.117L8.33 13.38l-2.855-.893c-.622-.194-.636-.622.132-.922l11.157-4.305c.519-.197.972.13.809.907z"/></svg></a><button type="button" class="chat-options" id="chat-options" aria-label="Действия с пользователем" title="Действия">⋮</button></div>
 <div class='msgs' id='msgs'></div><div class='qr' id='qr'></div><div class='send'><input id="inp" placeholder="Напиши сообщение…" maxlength="300"><button id="snd">➤</button></div></section>
 <section class='view sc' id='v-prof'>
 <div class='profile-heading'><div><small>ТВОЯ АНКЕТА</small><h1>Профиль</h1></div><button class='profile-logout' id='lo' aria-label='Выйти из аккаунта'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M10 17l5-5-5-5'/><path d='M15 12H3'/><path d='M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6'/></svg><span>Выйти</span></button></div>
@@ -691,6 +713,22 @@ button,.chip,.rb{touch-action:manipulation}
 <section class="edit-section edit-about"><div class="edit-section-head"><span class="edit-step">04</span><div><h2>О себе</h2><small>Что тебе нравится?</small></div></div><textarea class="fld" id="fb" maxlength="200" placeholder="Расскажи о своих увлечениях, любимых местах или идеальном выходном…"></textarea><div class="bio-count" id="bio-count">0 / 200</div></section>
 <button class="btn" id="fs">Начать знакомиться</button></div></section>
 </main>
+<div class="safety-overlay" id="safety-overlay" hidden>
+  <div class="safety-sheet" role="dialog" aria-modal="true" aria-labelledby="safety-title">
+    <div class="safety-head"><div><small>МИРЭА MATCH</small><h2 id="safety-title">Действия в чате</h2></div><button type="button" class="safety-close" id="safety-close" aria-label="Закрыть">×</button></div>
+    <div id="safety-main">
+      <button type="button" class="safety-option" id="report-open"><span class="safety-symbol">⚑</span><span><b>Пожаловаться</b><small>Сообщить о нарушении</small></span><i>›</i></button>
+      <button type="button" class="safety-option danger" id="block-open"><span class="safety-symbol">⊘</span><span><b>Заблокировать</b><small>Скрыть чат и анкету</small></span><i>›</i></button>
+    </div>
+    <div id="report-options" hidden><p class="safety-prompt">Выбери причину жалобы</p>
+      <button type="button" class="safety-reason" data-report-reason="harassment">Оскорбления или травля</button>
+      <button type="button" class="safety-reason" data-report-reason="spam">Спам или реклама</button>
+      <button type="button" class="safety-reason" data-report-reason="fake">Поддельная анкета</button>
+      <button type="button" class="safety-reason" data-report-reason="other">Другое</button>
+      <button type="button" class="safety-back" id="report-back">← Назад</button>
+    </div>
+  </div>
+</div>
 <nav class="nav"><button data-v="likes-received"><i><svg viewBox='0 0 24 24'><path d='M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7z'/></svg></i><span>Лайки</span></button><button data-v="matches"><i><svg viewBox='0 0 24 24'><path d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'/><circle cx='9' cy='7' r='4'/><path d='M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8'/></svg></i><span>Мэтчи</span></button><button data-v="feed" class="on"><i><svg viewBox='0 0 24 24'><path d='M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1.1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3a2.5 2.5 0 0 0 2.5 2.5z'/></svg></i><span>Лента</span></button><button data-v="chats"><i><svg viewBox='0 0 24 24'><path d='M7.9 20A9 9 0 1 0 4 16.1L2 22z'/></svg></i><span>Чаты</span><span class="bd" id="bd" hidden></span></button><button data-v="prof"><i><svg viewBox='0 0 24 24'><path d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg></i><span>Профиль</span></button></nav><div class="filter-sheet" id="filter-sheet" aria-hidden="true"><button class="filter-backdrop" data-filter-close aria-label="Закрыть фильтры"></button><div class="filter-panel" role="dialog" aria-modal="true" aria-labelledby="filter-title"><div class="filter-head"><b id="filter-title">Фильтры ленты</b><button class="filter-x" data-filter-close aria-label="Закрыть">×</button></div><span class="filter-caption">Корпус</span><div class="chips" id="flt"></div><span class="filter-caption">Курс</span><div class="chips" id="flk"></div><button class="filter-apply" id="filters-done">Показать анкеты</button></div></div>
 </div>
 <div id="mo"></div>
@@ -781,6 +819,8 @@ async function loadMessages(quiet=false){if(cur==null||chatLoading)return;chatLo
 function msgs(){const m=$('#msgs'),L=S.chats[cur]||[];if(shownFor!==cur){shownFor=cur;shown=L.length}const stick=!m.childElementCount||m.scrollHeight-m.clientHeight-m.scrollTop<90;
   m.innerHTML=L.map((x,i)=>{const mine=x.mine===true||x.w==='m';const d=x.createdAt?new Date(x.createdAt):null;const tm=d&&!Number.isNaN(d.getTime())?d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):'';const rd=!!x.readAt;return `<div class="m ${mine?'m':'t'} ${mine?'outgoing':'incoming'}${i>=shown?' nw':''}" data-message-side="${mine?'outgoing':'incoming'}">${esc(x.t)}${tm?`<span class="mtime">${tm}${mine?`<span class="receipt ${rd?'read':''}" title="${rd?'Прочитано':'Отправлено'}">${rd?'✓✓':'✓'}</span>`:''}</span>`:''}</div>`}).join('');
   shown=L.length;if(stick)m.scrollTop=m.scrollHeight}
+function closeSafety(){const o=$('#safety-overlay');o.hidden=true;$('#safety-main').hidden=false;$('#report-options').hidden=true}
+async function submitChatAction(action,reason){const id=cur;if(!id)return;try{const r=await fetch('/api/chat-actions',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',cache:'no-store',body:JSON.stringify({profileId:id,action,reason})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось выполнить действие');closeSafety();if(action==='block'){if(chatPoll)clearInterval(chatPoll);if(presencePoll)clearInterval(presencePoll);chatPoll=presencePoll=null;cur=null;S.matches=S.matches.filter(x=>x!==id);delete S.unread[id];delete S.chats[id];chatProfiles=chatProfiles.filter(p=>p.id!==id);P=P.filter(p=>p.id!==id);save();toast('Пользователь заблокирован');go('chats')}else toast('Жалоба отправлена. Спасибо, что сообщил.')}catch(e){toast(e.message||'Не удалось выполнить действие')}}
 async function send(x){const i=$('#inp'),text=typeof x==='string'?x:i.value.trim();if(!text||cur==null)return;if(text.length>2000)return toast('Максимум 2000 символов');if(typeof x!=='string')i.value='';const id=cur;try{const r=await fetch('/api/messages?profileId='+encodeURIComponent(id),{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({text})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось отправить сообщение');if(cur===id){S.chats[id]=[...(S.chats[id]||[]),d.message];msgs();const m=$('#msgs');m.scrollTop=m.scrollHeight;msgSig='';setTimeout(()=>{if(view==='chat'&&cur===id)loadMessages(true)},1500)}}catch(e){if(typeof x!=='string')i.value=text;toast(e.message||'Не удалось отправить сообщение')}}
 
 /* разделы лайков: данные берутся с сервера, а не из localStorage */
@@ -868,6 +908,12 @@ document.addEventListener('click',e=>{
 $('#filter-toggle').onclick=()=>{const x=$('#filter-sheet');x.classList.add('on');x.setAttribute('aria-hidden','false')};$('#filters-done').onclick=()=>{const x=$('#filter-sheet');x.classList.remove('on');x.setAttribute('aria-hidden','true')};$('#filter-sheet').addEventListener('click',e=>{if(e.target.closest('[data-filter-close]')){$('#filter-sheet').classList.remove('on');$('#filter-sheet').setAttribute('aria-hidden','true')}});
 $('#likes-back').onclick=()=>go('feed');$('#likes-list').onclick=async e=>{const b=e.target.closest('[data-like-open]');if(!b||b.disabled)return;const id=+b.dataset.likeOpen;b.disabled=true;try{const r=await fetch('/api/likes',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({profileId:id})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось поставить лайк');if(!S.seen.includes(id))S.seen.push(id);if(d.mutual&&!S.matches.includes(id))S.matches.push(id);save();b.textContent=d.mutual?'Мэтч ✓':'♥ В ответ';if(d.mutual)b.disabled=true;const p=person(id);if(d.mutual&&p)match(p,d.mutualUsername)}catch(err){b.disabled=false;toast(err.message)}};$('#bn').onclick=()=>swipe(0);$('#by').onclick=()=>swipe(1);$('#bs').onclick=()=>S.sl>0?swipe(1,1):toast('Суперлайки закончились ⭐');$('#bu').onclick=()=>{const id=S.hist.slice(-1)[0];if(!id||S.matches.includes(id))return toast('Нечего возвращать ↩');S.hist.pop();S.seen=S.seen.filter(x=>x!=id);save();flt=-1;fk=0;feed()};
 $('#bk').onclick=()=>{cur=null;go('chats')};$('#snd').onclick=send;
+$('#chat-options').onclick=()=>{$('#safety-main').hidden=false;$('#report-options').hidden=true;$('#safety-overlay').hidden=false};
+$('#safety-close').onclick=closeSafety;$('#safety-overlay').onclick=e=>{if(e.target===$('#safety-overlay'))closeSafety()};
+$('#report-open').onclick=()=>{$('#safety-main').hidden=true;$('#report-options').hidden=false};
+$('#report-back').onclick=()=>{$('#report-options').hidden=true;$('#safety-main').hidden=false};
+$('#block-open').onclick=()=>{if(confirm('Заблокировать пользователя? Чат и анкеты друг друга будут скрыты, сообщения станут недоступны.'))submitChatAction('block')};
+$('#report-options').onclick=e=>{const b=e.target.closest('[data-report-reason]');if(b)submitChatAction('report',b.dataset.reportReason)};
 $('#inp').onkeydown=e=>{if(e.key=='Enter')send()};
 $('#pf').onchange=e=>{const f=e.target.files[0];if(f)readPhoto(f,d=>{F.img=d;photo()})};$('#fb').oninput=updateBioCount;
 $('#fs').onclick=submit;$('#fbk').onclick=()=>go('prof');$('#ed').onclick=()=>form(1);
