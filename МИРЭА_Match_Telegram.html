@@ -564,6 +564,52 @@ button,.chip,.rb{touch-action:manipulation}
 :root[data-theme="day"] #v-chat .presence{color:#896f65}
 :root[data-theme="day"] #v-chat .presence.online{color:#3b8c62}
 :root[data-theme="day"] #v-chat .presence-dot{background:#3b8c62;box-shadow:0 0 0 3px rgba(59,140,98,.12)}
+
+/* Profile redesign */
+#v-prof{gap:0;padding:12px 14px 26px;scrollbar-width:none}
+#v-prof::-webkit-scrollbar{display:none}
+#v-prof .profile-heading{display:flex;align-items:center;justify-content:space-between;padding:1px 2px 13px}
+#v-prof .profile-heading small{display:block;margin-bottom:3px;color:var(--mut);font-size:10px;font-weight:800;letter-spacing:.14em}
+#v-prof .profile-heading h1{font-size:27px;line-height:1.1;font-weight:850;letter-spacing:-.7px;color:var(--ink)}
+#v-prof .profile-pill{display:flex;align-items:center;gap:7px;padding:8px 11px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--mut);font-size:11px;font-weight:700}
+#v-prof .profile-pill i{width:7px;height:7px;border-radius:50%;background:#70c99a;box-shadow:0 0 0 3px rgba(112,201,154,.13)}
+#v-prof .profile-hero{flex:none;padding:18px 17px 13px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(145deg,var(--card),color-mix(in srgb,var(--a) 12%,var(--card)));box-shadow:0 12px 28px rgba(0,0,0,.12)}
+#v-prof .profile-identity{display:flex;align-items:center;gap:14px;min-width:0}
+#v-prof .profile-avatar{width:76px;height:76px;font-size:34px;border:3px solid color-mix(in srgb,var(--a) 64%,transparent)!important;box-shadow:0 0 0 4px color-mix(in srgb,var(--a) 14%,transparent)!important}
+#v-prof .profile-name{display:grid;gap:4px;min-width:0}
+#v-prof .profile-name b{color:var(--ink);font-size:21px;font-weight:850;letter-spacing:-.4px;overflow:hidden;text-overflow:ellipsis}
+#v-prof .profile-name small{color:var(--mut);font-size:13px}
+#v-prof .profile-stats{margin-top:18px;padding-top:14px;border-top:1px solid var(--line);gap:0}
+#v-prof .profile-stats>div{padding:0 5px}
+#v-prof .profile-stats>div+div{border-left:1px solid var(--line)}
+#v-prof .profile-stats b{font-size:25px;line-height:1.05}
+#v-prof .profile-stats small{display:block;margin-top:5px;color:var(--mut);font-size:11px;font-weight:650}
+#v-prof .profile-edit-button{display:flex;align-items:center;justify-content:center;gap:9px;margin:12px 0 15px;padding:14px 16px;border-radius:16px;font-size:15px}
+#v-prof .profile-edit-button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#v-prof .profile-section{flex:none;padding:14px 16px;margin:0 0 17px;border:1px solid var(--line);border-radius:20px;background:var(--card);box-shadow:none}
+#v-prof .profile-section-title h3,#v-prof .profile-preview-title h3{font-size:16px;font-weight:800;color:var(--ink)}
+#v-prof .profile-section-title small,#v-prof .profile-preview-title small{display:block;margin-top:3px;color:var(--mut);font-size:12px}
+#v-prof .profile-theme{padding:13px 0 2px;margin-top:11px;border-top:1px solid var(--line)}
+#v-prof .profile-theme span{display:grid;gap:3px}
+#v-prof .profile-theme b{font-size:14px;color:var(--ink)}
+#v-prof .profile-theme small{font-size:11px;color:var(--mut)}
+#v-prof .profile-preview-title{display:flex;align-items:center;justify-content:space-between;padding:1px 2px 9px}
+#v-prof .profile-preview-title>span{padding:5px 8px;border-radius:99px;background:color-mix(in srgb,var(--a) 15%,var(--card));color:var(--a);font-size:9px;font-weight:850;letter-spacing:.08em}
+#v-prof .pv{height:285px;min-height:285px;margin:0 0 15px;border-radius:23px;overflow:hidden}
+#v-prof .pv .card{border-radius:23px}
+#v-prof .pv .info{padding:13px 15px}
+#v-prof .pv .info h2{font-size:23px}
+#v-prof .pv .tags{gap:5px;margin:7px 0 5px}
+#v-prof .pv .tags span{padding:4px 7px;font-size:10px}
+#v-prof .pv .dir{font-size:11px;margin:3px 0}
+#v-prof .pv .bio{font-size:12px;line-height:1.3}
+#v-prof .pv .mp{top:11px;padding:5px 10px;font-size:12px}
+#v-prof .profile-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:3px 3px 22px}
+#v-prof .profile-actions .ghost{width:auto;padding:10px 0;color:var(--mut);font-size:13px}
+#v-prof .profile-delete{padding:10px 0;color:#e47771;font-size:13px;font-weight:700}
+:root[data-theme="day"] #v-prof .profile-hero{box-shadow:0 12px 28px rgba(95,54,35,.08)}
+:root[data-theme="day"] #v-prof .profile-delete{color:#bd5149}
+@media(max-width:360px){#v-prof .profile-hero{padding:15px 13px 12px}#v-prof .profile-avatar{width:66px;height:66px;font-size:29px}#v-prof .profile-name b{font-size:19px}#v-prof .profile-stats b{font-size:22px}#v-prof .pv{height:260px;min-height:260px}}
 </style>
 </head>
 <body>
@@ -577,7 +623,18 @@ button,.chip,.rb{touch-action:manipulation}
 <section class="view" id="v-chats"><h3 class="h">Чаты</h3><div id="list"></div></section>
 <section class="view" id="v-chat"><div class="chead"><button class="back" id="bk">←</button><div id="chav"></div><div class="chat-who"><b id="chn"></b><small class="presence" id="presence"></small></div><a class="chat-tg" id="chat-tg" href="#" target="_blank" rel="noopener noreferrer" aria-label="Написать в Telegram" title="Написать в Telegram" hidden>✈</a></div>
 <div class='msgs' id='msgs'></div><div class='qr' id='qr'></div><div class='send'><input id="inp" placeholder="Напиши сообщение…" maxlength="300"><button id="snd">➤</button></div></section>
-<section class='view sc' id='v-prof'><div class='sec'><div class='acc'><div id='pav'></div><div><b id='pn'></b><small id='pm'></small></div></div><div class='stats' style='margin-top:14px'><div><b id='s1'>0</b><small>лайков</small></div><div><b id='s2'>0</b><small>мэтчей</small></div><div><b id='s3'>0</b><small>⭐ осталось</small></div></div></div><div class='sec'><h4>Настройки</h4><div class='sw' data-sw='theme'><span>Тёмная тема</span><i></i></div></div><div class='pv' id='pv'></div><button class='btn' id='ed'>Редактировать анкету</button><button class='ghost' id='lo'>Выйти из аккаунта</button><button class='ghost' id='rs'>Удалить анкету</button></section>
+<section class='view sc' id='v-prof'>
+<div class='profile-heading'><div><small>ТВОЯ АНКЕТА</small><h1>Профиль</h1></div><span class='profile-pill'><i></i>Аккаунт активен</span></div>
+<div class='profile-hero'>
+<div class='profile-identity'><div id='pav'></div><div class='profile-name'><b id='pn'></b><small id='pm'></small></div></div>
+<div class='stats profile-stats'><div><b id='s1'>0</b><small>лайков</small></div><div><b id='s2'>0</b><small>мэтчей</small></div><div><b id='s3'>0</b><small>⭐ осталось</small></div></div>
+</div>
+<button class='btn profile-edit-button' id='ed'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M12 20h9'/><path d='M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z'/></svg>Редактировать анкету</button>
+<div class='profile-section sec'><div class='profile-section-title'><div><h3>Настройки</h3><small>Внешний вид приложения</small></div></div><div class='sw profile-theme' data-sw='theme'><span><b>Тёмная тема</b><small>Комфортный режим для вечера</small></span><i></i></div></div>
+<div class='profile-preview-title'><div><h3>Анкета в ленте</h3><small>Так тебя видят другие</small></div><span>ПРЕДПРОСМОТР</span></div>
+<div class='pv' id='pv'></div>
+<div class='profile-actions'><button class='ghost' id='lo'>Выйти из аккаунта</button><button class='profile-delete' id='rs'>Удалить анкету</button></div>
+</section>
 <section class='view sc' id='v-matches'><h3 class='h'>Мэтчи</h3><div class='mgrid' id='mlist'></div></section>
 <section class='view sc' id='v-likes'><div class='chead'><button class='back' id='likes-back'>←</button><b>Кто тебя лайкнул</b></div><div id='likes-list'></div></section>
 <section class="view" id="v-form"><div class="form">
@@ -726,7 +783,7 @@ async function auth(){
     const mr=await fetch('/api/profiles/me',{credentials:'same-origin',cache:'no-store'});const md=await mr.json();pingPresence();if(md.profile){S.me=md.profile;save();go('feed')}else{S.me=null;form(0)}
   }catch(e){shake('#ac');hint.textContent=e.message}
 }
-function prof(){$('#pav').innerHTML=av(S.me);$('#pn').textContent=S.me.n;$('#pm').textContent=S.email||'Telegram';$('#s1').textContent=S.likes;$('#s2').textContent=S.matches.length;$('#s3').textContent=S.sl;$('#pv').innerHTML=`<div class='card' style='transform:none'>${card(S.me)}</div>`;document.querySelector('[data-sw=theme]').classList.toggle('on',isDark())}
+function prof(){$('#pav').innerHTML=av(S.me,'big profile-avatar');$('#pn').textContent=S.me.n;const account=S.email||'Telegram';$('#pm').textContent=account==='Telegram'||account.startsWith('tg:')?'Аккаунт Telegram':account;$('#s1').textContent=S.likes;$('#s2').textContent=S.matches.length;$('#s3').textContent=S.sl;$('#pv').innerHTML=`<div class='card' style='transform:none'>${card(S.me)}</div>`;document.querySelector('[data-sw=theme]').classList.toggle('on',isDark())}
 function form(edit){
   F={img:edit?S.me.img:null,c:edit?S.me.c:0,k:edit?S.me.k:1,t:edit?[...(S.me.t||[])]:[]};
   $('#ft').textContent=edit?'Моя анкета':'Создай анкету';
