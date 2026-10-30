@@ -616,8 +616,7 @@ button,.chip,.rb{touch-action:manipulation}
 #v-form .form-heading{display:flex;align-items:center;gap:10px;margin:6px 0 4px}
 #v-form .form-heading h1{flex:1;min-width:0;margin:0;font-size:26px}
 #v-form .form-back,#v-form .form-save{width:42px;height:42px;flex:none;display:grid;place-items:center;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);font-size:24px;font-weight:800;box-shadow:var(--sh)}
-#v-form .form-save{background:linear-gradient(135deg,var(--a),var(--b));border:0;color:#fff;font-size:25px}
-#v-form .form-back[hidden],#v-form .form-save[hidden],#v-form #fs[hidden]{display:none}
+#v-form .form-back[hidden],#v-form #fs[hidden]{display:none}
 
 #v-form{padding:0 14px}
 #v-form .profile-form{padding:0 0 24px}
@@ -629,7 +628,7 @@ button,.chip,.rb{touch-action:manipulation}
 #v-form .form-save{background:linear-gradient(135deg,var(--a),var(--b));border:0;color:#fff;font-size:25px}
 #v-form .form-back[hidden],#v-form .form-save[hidden],#v-form #fs[hidden]{display:none}
 #v-form .form-intro{margin:0 0 14px;color:var(--mut);font-size:13px;line-height:1.45}
-#v-form .form-photo-card{display:flex;align-items:center;gap:14px;padding:14px;margin:0 0 12px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(130deg,var(--card),color-mix(in srgb,var(--b) 8%,var(--card)));box-shadow:var(--sh)}
+#v-form .form-photo-card{display:flex;cursor:pointer;align-items:center;gap:14px;padding:14px;margin:0 0 12px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(130deg,var(--card),color-mix(in srgb,var(--b) 8%,var(--card)));box-shadow:var(--sh)}
 #v-form .form-photo-control{width:72px;height:72px;margin:0;padding:0;border:0;border-radius:20px;background:color-mix(in srgb,var(--a) 12%,var(--card));overflow:hidden;flex:none}
 #v-form .form-photo-preview{display:grid;place-items:center;width:100%;height:100%;border-radius:inherit;background-size:cover;background-position:center;color:var(--a);font-size:28px}
 #v-form .form-photo-copy{display:grid;gap:5px;min-width:0;flex:1}
@@ -680,9 +679,9 @@ button,.chip,.rb{touch-action:manipulation}
 <section class='view sc' id='v-matches'><h3 class='h'>Мэтчи</h3><div class='mgrid' id='mlist'></div></section>
 <section class='view sc' id='v-likes'><div class='chead'><button class='back' id='likes-back'>←</button><b>Кто тебя лайкнул</b></div><div id='likes-list'></div></section>
 <section class="view" id="v-form"><div class="form profile-form">
-<div class="form-heading"><button type="button" class="form-back" id="fbk" aria-label="Назад" hidden>←</button><div class="form-title"><small>ТВОЯ АНКЕТА</small><h1 id="ft">Создай анкету</h1></div><button type="button" class="form-save" id="fcheck" aria-label="Сохранить анкету" title="Сохранить" hidden>✓</button></div>
+<div class="form-heading"><button type="button" class="form-back" id="fbk" aria-label="Назад" hidden>←</button><div class="form-title"><small>ТВОЯ АНКЕТА</small><h1 id="ft">Создай анкету</h1></div></div>
 <p class="s form-intro" id="form-intro">Знакомства только для студентов РТУ МИРЭА</p>
-<div class="form-photo-card"><label class="ph-up form-photo-control" id="pu" for="pf"><span class="form-photo-preview" id="fphoto"><span>＋</span></span><input type="file" id="pf" accept="image/*" hidden></label><div class="form-photo-copy"><b>Фото профиля</b><small id="fphototext">Добавь фото, чтобы тебя узнали</small></div><span class="form-photo-edit" aria-hidden="true">✎</span></div>
+<label class="form-photo-card" id="pu" for="pf" aria-label="Нажми, чтобы изменить фото анкеты"><span class="form-photo-preview" id="fphoto"><span>＋</span></span><span class="form-photo-copy"><b>Фото профиля</b><small id="fphototext">Добавь фото, чтобы тебя узнали</small></span><span class="form-photo-edit" aria-hidden="true">✎</span><input type="file" id="pf" accept="image/*" hidden></label>
 <section class="edit-section"><div class="edit-section-head"><span class="edit-step">01</span><div><h2>Основное</h2><small>Как к тебе обращаться?</small></div></div><div class="edit-fields"><label class="edit-field"><span>Имя</span><input class="fld" id="fn" maxlength="24" placeholder="Например, Аня"></label><label class="edit-field edit-age"><span>Возраст</span><input class="fld" id="fa" type="number" min="16" max="40" placeholder="19"></label></div></section>
 <section class="edit-section"><div class="edit-section-head"><span class="edit-step">02</span><div><h2>Учёба</h2><small>Поможет найти своих</small></div></div><span class="edit-label">Корпус</span><div class="grid edit-chips" id="fc"></div><label class="edit-field edit-direction"><span>Направление</span><select class="fld" id="fd"></select></label><span class="edit-label">Курс</span><div class="grid edit-chips" id="fk"></div></section>
 <section class="edit-section"><div class="edit-section-head"><span class="edit-step">03</span><div><h2>Интересы</h2><small>Выбери до трёх</small></div></div><div class="grid edit-chips" id="fi"></div></section>
@@ -828,7 +827,7 @@ function prof(){$('#pav').innerHTML=av(S.me,'big profile-avatar');$('#pn').textC
 async function copyTelegramUsername(){const pm=$('#pm'),value=pm.textContent;let copied=false;try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(value);copied=true}}catch(e){}if(!copied){const ta=document.createElement('textarea');ta.value=value;ta.style.cssText='position:fixed;opacity:0;left:-9999px;top:0';document.body.appendChild(ta);ta.select();try{copied=document.execCommand('copy')}catch(e){}ta.remove()}toast(copied?'Username скопирован':'Не удалось скопировать username')}
 function form(edit){
   F={img:edit?S.me.img:null,c:edit?S.me.c:0,k:edit?S.me.k:1,t:edit?[...(S.me.t||[])]:[]};
-  $('#ft').textContent=edit?'Редактирование анкеты':'Создай анкету';$('#form-intro').textContent=edit?'Обнови детали — они появятся в твоей анкете.':'Знакомства только для студентов РТУ МИРЭА';$('#fbk').hidden=!edit;$('#fcheck').hidden=!edit;$('#fs').hidden=!!edit;$('#fs').textContent='Начать знакомиться';
+  $('#ft').textContent=edit?'Редактирование анкеты':'Создай анкету';$('#form-intro').textContent=edit?'Обнови детали — они появятся в твоей анкете.':'Знакомства только для студентов РТУ МИРЭА';$('#fbk').hidden=!edit;$('#fs').hidden=false;$('#fs').textContent=edit?'Сохранить изменения':'Начать знакомиться';
   $('#fn').value=edit?S.me.n:'';$('#fa').value=edit?S.me.a:'';$('#fb').value=edit?S.me.b:'';
   $('#fd').innerHTML=D.map(d=>`<option ${edit&&S.me.d==d?'selected':''}>${d}</option>`).join('');
   fchips();fi();photo();go('form');
@@ -867,7 +866,7 @@ $('#likes-back').onclick=()=>go('feed');$('#likes-list').onclick=async e=>{const
 $('#bk').onclick=()=>{cur=null;go('chats')};$('#snd').onclick=send;
 $('#inp').onkeydown=e=>{if(e.key=='Enter')send()};
 $('#pf').onchange=e=>{const f=e.target.files[0];if(f)readPhoto(f,d=>{F.img=d;photo()})};
-$('#fs').onclick=submit;$('#fcheck').onclick=submit;$('#fbk').onclick=()=>go('prof');$('#ed').onclick=()=>form(1);
+$('#fs').onclick=submit;$('#fbk').onclick=()=>go('prof');$('#ed').onclick=()=>form(1);
 $('#rs').onclick=()=>{if(confirm('Удалить анкету, лайки и чаты?')){try{localStorage.removeItem(K)}catch(e){}
   S=Object.assign(DF(),{email:S.email});form(0)}};
 const Q=['Привет! 👋','Кофе после пар? ☕','Какой корпус МИРЭА лучше? 🏢'];if(S.theme)document.documentElement.dataset.theme=S.theme==='light'||S.theme==='day'?'day':'night';tgColors();$('#ab').onclick=auth;$('#av').onclick=auth;$('#ac').onkeydown=e=>{if(e.key=='Enter')auth()};$('#lo').onclick=async()=>{try{await fetch('/api/auth/logout',{method:'POST',credentials:'same-origin'})}catch(e){}S=Object.assign(DF(),{out:1});save();authToken=null;$('#ac').value='';$('#ac').style.display='none';$('#av').style.display='none';$('#ab').textContent='Получить код в Telegram';$('#authhint').textContent='';go('auth')};for(let i=0;i<(matchMedia('(max-width:600px)').matches?7:14);i++){const s=document.createElement('span');s.className='fl';s.textContent=['♥','✦','♡','✧'][i%4];s.style.cssText=`left:${Math.random()*100}vw;font-size:${14+Math.random()*22}px;animation-duration:${14+Math.random()*16}s;animation-delay:-${Math.random()*20}s;color:var(--${i%2?'a':'b'})`;document.body.prepend(s)}var TG=window.Telegram&&Telegram.WebApp&&Telegram.WebApp.initData?Telegram.WebApp:null;
