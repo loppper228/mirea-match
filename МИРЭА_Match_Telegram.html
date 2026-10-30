@@ -337,53 +337,97 @@ select.fld option{background:var(--card);color:var(--ink)}
 #v-chat .send button{background:var(--pg);color:var(--on);border:0;box-shadow:var(--glow)}
 #v-chat .back{background:var(--card)!important;color:var(--a)!important;border:1px solid var(--line)!important;box-shadow:none!important}
 #v-chat .send input{background:var(--card2)!important;color:var(--ink)!important;border:1px solid var(--line)!important;box-shadow:none!important}
-
-/* MIREA MATCH — warm minimal Telegram Mini App refresh */
+/* === MIREA MATCH: REAL REDESIGN V3 === */
 :root[data-theme="night"]{
- --bgm:#150f12;--card:#21171c;--card2:#2b1d23;
- --ink:#fff0e8;--mut:#c2a69b;--line:rgba(255,190,160,.15);
- --a:#ffb38f;--b:#ff806e;--lg:linear-gradient(135deg,#ffd0b0,#ff9878);
- --pg:linear-gradient(135deg,#ffd0b0,#ff9878);
- --sh:0 12px 28px -18px rgba(0,0,0,.88);
+  --bgm:#100d12;--bg:#171219;--card:#211922;--card2:#2a2029;
+  --ink:#fff1e8;--mut:#b9a6a0;--line:rgba(255,196,165,.14);
+  --a:#ffc09b;--b:#ff896e;--lg:linear-gradient(135deg,#ffd0ad,#ff9878);
+  --pg:linear-gradient(135deg,#ffd0ad,#ff9878);--on:#321a16;
+  --sh:0 12px 32px rgba(0,0,0,.28);--glow:0 8px 22px rgba(255,145,110,.18);
+  color-scheme:dark;
 }
-body{background:var(--bgm);background-image:radial-gradient(ellipse at 85% 0%,rgba(255,139,105,.10),transparent 38%);background-attachment:fixed}
-#app{background:transparent}
-.top{padding:12px 18px 8px}
-.logo{font-size:22px;letter-spacing:-.55px}
-.logo::after{letter-spacing:.12em}
-.view{padding-left:14px;padding-right:14px}
-.chips{gap:7px;padding:8px 2px 10px}
-.chip{padding:8px 13px;font-size:13px}
-.deck{margin:3px 1px 6px}
-.card{border-radius:26px;background-color:#3a1718;border:1px solid rgba(255,190,160,.18);box-shadow:0 14px 34px -18px #000}
-.ph{background-color:#451b20;background-image:linear-gradient(180deg,rgba(35,12,15,.02),rgba(18,8,11,.12))}
-.shade{background:linear-gradient(180deg,rgba(20,9,12,.08) 0%,transparent 34%,rgba(16,7,10,.24) 52%,rgba(16,7,10,.94) 100%)}
-.info{padding:20px 19px 22px}
-.info h2{font-size:29px;line-height:1.1}
+html,body{background:#100d12!important;color:var(--ink);overscroll-behavior:none}
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:-.015em}
+#app{max-width:480px;background:linear-gradient(180deg,#171118 0%,#100d12 72%);padding-bottom:env(safe-area-inset-bottom,0px)}
+.top{padding:13px 19px 11px;border-bottom:1px solid rgba(255,195,160,.08);background:rgba(20,15,20,.92)}
+.logo{font-size:21px;letter-spacing:-.7px;background:none;color:#ffe2d1;-webkit-text-fill-color:#ffe2d1}
+.logo::after{content:'РТУ МИРЭА';font-size:9px;color:#d6aaa0;-webkit-text-fill-color:#d6aaa0;border:1px solid rgba(255,190,160,.2);background:#241a22;letter-spacing:.13em;padding:4px 9px}
+.hb{color:#ffad8b;-webkit-text-fill-color:#ffad8b}
+.view{padding:0 15px}
+#v-feed{padding-left:14px;padding-right:14px}
+.chips{gap:7px;padding:9px 2px 8px}
+#flt .chip{background:#241a23;border:1px solid rgba(255,190,160,.13);color:#d6c1b9;padding:9px 14px;font-size:13px}
+#flt .chip.on{background:#ffd0ad;color:#321a16;border-color:transparent;font-weight:800}
+#flk{padding-top:0!important;padding-bottom:7px}
+#flk .chip{background:transparent;border-color:rgba(255,190,160,.1);color:#bca8a0;font-size:12px;padding:6px 10px}
+#flk .chip.on{background:#3a2528;color:#ffd0ad;border-color:rgba(255,190,160,.28)}
+.deck{margin:3px 1px 5px;min-height:160px}
+.card{border-radius:27px;border:1px solid rgba(255,194,160,.2);background:#28151a;box-shadow:0 16px 36px rgba(0,0,0,.34);overflow:hidden}
+.ph{background-color:#281820!important;background-image:radial-gradient(ellipse at 50% 22%,#56323a 0%,#351d27 42%,#1c131a 100%);color:#e9b6a2;font-size:86px}
+.ph.img{background-color:#291820!important;background-size:cover!important;background-position:center!important}
+/* Inline profile image stays the source of truth; fallback gradient remains visible if it fails. */
+.ph.img:not([style*="background-image"]){background-image:radial-gradient(ellipse at 50% 25%,#69414a,#291820 70%)!important}
+.shade{background:linear-gradient(180deg,rgba(12,8,12,.12) 0%,transparent 34%,rgba(12,8,12,.12) 48%,rgba(12,8,12,.92) 100%)}
+.info{padding:19px 19px 20px;color:#fff2e9}
+.info h2{font-size:29px;line-height:1.08;letter-spacing:-.8px;color:#fff0e6}
+.info h2 span{color:#f7d8c9;opacity:.9}
+.dir{font-size:13px;color:#f2d9ce;opacity:.9;margin:7px 0 5px}
 .tags{gap:6px;margin:10px 0 9px}
-.tags span{padding:6px 10px;background:rgba(255,202,178,.17);border:1px solid rgba(255,208,185,.23);font-size:12px}
-.dir{font-size:14px;margin:7px 0}
-.bio{font-size:14px;line-height:1.45}
-.mp{top:18px;padding:7px 14px;font-size:14px}
-.acts{gap:14px;padding:10px 0 12px}
-.rb{width:58px;height:58px}
-.rb.no{width:68px;height:68px}
-.rb.yes{width:76px;height:76px}
-.nav{margin:0 0 0;padding:8px 7px max(8px,env(safe-area-inset-bottom));border-radius:22px 22px 0 0;background:rgba(34,24,30,.96);border-top:1px solid var(--line);backdrop-filter:blur(18px)}
-.nav button{font-size:10px;gap:4px}
-.nav button i{width:50px;height:32px}
-.nav button.on i{background:var(--pg);box-shadow:0 5px 15px rgba(255,150,115,.2)}
-.row,.sec,.like-row{border-radius:18px;box-shadow:none}
-#v-chat .msgs>.m.t{background:#30232a!important;color:var(--ink)!important;border:1px solid var(--line)!important}
-#v-chat .msgs>.m.m{background:var(--pg)!important;color:#321b16!important}
-#v-chat .send input{background:#241a20!important}
-@media(max-height:720px){
- .info{padding:14px 16px}
- .info h2{font-size:25px}
- .tags{margin:7px 0}
- .acts{padding:6px 0}
- .rb.no{width:60px;height:60px}.rb.yes{width:66px;height:66px}
-}
+.tags span{padding:6px 10px;background:rgba(255,226,210,.13);border:1px solid rgba(255,220,200,.14);border-radius:12px;color:#ffe8dc;font-size:12px;backdrop-filter:blur(10px)}
+.bio{font-size:14px;line-height:1.38;color:#f6e5dd;max-width:95%}
+.mp{top:17px;background:#ffd0ad;color:#321a16;box-shadow:none;padding:7px 14px;font-size:14px}
+.stamp{background:rgba(20,12,16,.55);backdrop-filter:blur(8px)}
+.acts{gap:14px;padding:10px 0 13px;align-items:center}
+.rb{width:60px;height:60px;background:#241a23;border:1px solid rgba(255,195,160,.16);box-shadow:none;color:#f6d6c7}
+.rb.sm{width:48px;height:48px;font-size:19px}
+.rb.no{color:#ff8978}.rb.st{color:#ffd36f}.rb.yes{width:76px;height:76px;background:#ffc09b;color:#321a16;border:0;box-shadow:0 8px 22px rgba(255,145,110,.2);font-size:32px}
+.nav{margin:4px 0 0;padding:8px 7px calc(7px + env(safe-area-inset-bottom,0px));gap:2px;border-radius:23px 23px 0 0;background:rgba(34,25,34,.97);border:1px solid rgba(255,195,160,.12);border-bottom:0;box-shadow:0 -8px 26px rgba(0,0,0,.18);backdrop-filter:blur(18px)}
+.nav button{font-size:10px;color:#b9a5a0;gap:4px;padding:4px 0}
+.nav button i{width:44px;height:28px;font-size:0;border-radius:12px}
+.nav button svg{width:21px;height:21px;stroke-width:1.9}
+.nav button.on{color:#ffd0ad;background:transparent}
+.nav button.on i{background:#ffc09b;box-shadow:none;transform:translateY(-2px)}
+.nav button.on i svg{stroke:#321a16}
+.bd{background:#ff8d75;border:2px solid #241a23;color:#2c1715}
+/* lists, profile, likes */
+.h{font-size:22px;letter-spacing:-.6px;padding:15px 3px 12px}
+#list{gap:0;padding:0 0 14px}
+.row{background:transparent;border:0;border-bottom:1px solid rgba(255,195,160,.1);border-radius:0;padding:13px 3px;box-shadow:none;gap:12px}
+.row b{font-size:15px;color:#fff0e7}.row small{font-size:13px;color:#b9a6a0;max-width:230px}
+.av{background-color:#34262f!important;background-image:none!important;border:1px solid rgba(255,195,160,.18)!important;color:#f5d3c3!important;font-size:20px!important;box-shadow:none!important}
+.av.big{border:2px solid #ffc09b!important}
+.dot{width:9px;height:9px;background:#7bd9ad;box-shadow:0 0 0 3px #211922}
+.sec,.like-row{background:#211922;border:1px solid rgba(255,195,160,.12);border-radius:20px;box-shadow:none}
+.stats b{background:none;color:#ffc09b;-webkit-text-fill-color:#ffc09b}
+.btn,.tg button,.tg a,.like-row button{background:#ffc09b;color:#321a16;box-shadow:none;border-radius:14px}
+.chip{background:#241a23;color:#d4beb4;border-color:rgba(255,195,160,.13)}
+.chip.on{background:#ffc09b;color:#321a16;box-shadow:none}
+.fld,.send input{background:#241a23;border:1px solid rgba(255,195,160,.15);color:#fff0e7;border-radius:14px}
+.ph-up{background:#241a23;border:1px dashed #d79b80;color:#ffc09b}
+.sw i{background:#49343b}.sw.on i{background:#ffc09b}.sw.on i:after{background:#321a16}
+/* chat: clean messenger surface, no wallpaper */
+#v-chat{padding:0 14px 8px}
+#v-chat .chead{padding:10px 2px 12px;border-bottom:1px solid rgba(255,195,160,.12)}
+#v-chat .back{background:#241a23;color:#ffd0ad;border:1px solid rgba(255,195,160,.12)}
+#v-chat .msgs{background:transparent!important;background-image:none!important;padding:14px 4px;gap:9px}
+#v-chat .msgs>.m.t{background:#2a2029!important;color:#fff0e7!important;border:1px solid rgba(255,195,160,.08)!important;border-radius:17px 17px 17px 5px}
+#v-chat .msgs>.m.m{background:#ffd0ad!important;color:#321a16!important;border-radius:17px 17px 5px 17px}
+#v-chat .msgs>.m.m .mtime{color:rgba(50,26,22,.65)!important}
+#v-chat .msgs>.m.t .mtime{color:#c2aaa0!important}
+#v-chat .send{padding:8px 0 calc(8px + env(safe-area-inset-bottom,0px))}
+#v-chat .send button{background:#ffc09b;color:#321a16;box-shadow:none}
+#v-chat .qr .chip{background:#241a23;color:#e8d4ca;border-color:rgba(255,195,160,.12)}
+#v-chat .mtime .receipt.read{color:#1687e8!important}
+/* modal and auth */
+#mo{background:rgba(10,7,11,.82)}.mbox{color:#fff0e7}.mt{background:none;color:#ffc09b;-webkit-text-fill-color:#ffc09b}
+.form h1,.auth h1{color:#fff0e7}.form p.s{color:#b9a6a0}
+/* viewport and touch ergonomics */
+html,body{height:var(--tg-viewport-stable-height,100%);min-height:100%;}
+#app{height:var(--tg-viewport-stable-height,100%);min-height:0}
+.view{padding-bottom:4px}
+button,.chip,.rb{touch-action:manipulation}
+@media(max-height:720px){.deck{min-height:130px}.info{padding:14px}.info h2{font-size:25px}.tags{margin:7px 0}.acts{padding:6px 0 8px}.rb.yes{width:66px;height:66px}}
+@media(min-width:600px){#app{max-width:520px}.view{padding-left:20px;padding-right:20px}}
 
 </style>
 </head>
@@ -426,7 +470,7 @@ const DF=()=>({email:null,out:0,me:null,tg:'',share:0,theme:'',sl:3,likes:0,hist
 try{const j=localStorage.getItem(K);if(j)S=Object.assign(S,JSON.parse(j))}catch(e){}
 let st;const flush=()=>{clearTimeout(st);try{localStorage.setItem(K,JSON.stringify({...S,chats:{}}))}catch(e){}};const save=()=>{clearTimeout(st);st=setTimeout(flush,400)};addEventListener('pagehide',flush);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const bg=p=>p.img?`background-color:hsl(${p.h||12} 45% 24%);background-image:url("${String(p.img).replace(/["\\\\]/g,"")}"),linear-gradient(160deg,hsl(${p.h||12} 65% 34%),hsl(${((p.h||12)+28)%360} 60% 13%));background-size:cover;background-position:center`:`background:linear-gradient(160deg,hsl(${p.h} 65% 38%),hsl(${(p.h+28)%360} 60% 14%))`;
+const bg=p=>p.img?`background-image:url(${p.img})`:`background:linear-gradient(160deg,hsl(${p.h} 85% 62%),hsl(${(p.h+55)%360} 75% 42%))`;
 const av=(p,c='')=>`<div class="av ${c}" style="${bg(p)}">${p.img?'':p.e||esc(p.n[0])}</div>`;
 const card=p=>`<div class="ph ${p.img?'img':''}" style="${bg(p)}">${p.img?'':p.e}</div><div class="shade"></div>
 <div class="info"><h2>${esc(p.n)}, <span>${p.a}</span></h2><div class="tags"><span>🏢 ${C[p.c]}</span><span>🎓 ${p.k} курс</span>${(p.t||[]).map(t=>`<span>${t}</span>`).join('')}</div>
