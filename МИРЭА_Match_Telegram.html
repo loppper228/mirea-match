@@ -777,7 +777,7 @@ function go(v){
   $('#app').classList.toggle('nonav',['form','chat','auth'].includes(v));
   if(v=='feed')feed(true);if(v=='chats')chats();if(v=='prof')prof();if(v=='likes')loadLikes();if(v=='matches')loadMatches();badge();
 }
-function badge(){const n=Object.keys(S.unread).length;$('#bd').hidden=!n;$('#bd').textContent=n}
+function badge(){const n=Object.values(S.unread||{}).reduce((sum,count)=>sum+(Number(count)||0),0),el=$('#bd');el.hidden=!n;el.textContent=n>99?'99+':String(n);el.setAttribute('aria-label',n+' непрочитанных сообщений');el.title=n+' непрочитанных сообщений'}
 
 /* лента */
 async function refreshProfiles(){
@@ -825,7 +825,7 @@ function match(p,mutualUsername){
 let chatProfiles=[], chatPoll=null, presencePoll=null, chatLoading=false, presenceBusy=false;
 async function chats(){
   const l=$('#list');l.innerHTML='<div class="none">Загружаю чаты…</div>';
-  try{const r=await fetch('/api/chats',{credentials:'same-origin',cache:'no-store'});const d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось загрузить чаты');chatProfiles=Array.isArray(d.chats)?d.chats:[];S.unread={};chatProfiles.forEach(p=>{if(p.unread)S.unread[p.id]=1});badge();
+  try{const r=await fetch('/api/chats',{credentials:'same-origin',cache:'no-store'});const d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось загрузить чаты');chatProfiles=Array.isArray(d.chats)?d.chats:[];S.unread={};chatProfiles.forEach(p=>{if(p.unread)S.unread[p.id]=Number(p.unread)||0});badge();
     for(const p of chatProfiles)if(!P.some(x=>x.id===p.id))P.push(p);
     if(!chatProfiles.length){l.innerHTML='<div class="none">Пока нет взаимных лайков 💫<br>Чат откроется, когда вы понравитесь друг другу.</div>';return;}
     l.innerHTML=chatProfiles.map((p,i)=>`<button class="row" data-id="${p.id}" style="animation-delay:${i*60}ms">${av(p)}<div><b>${esc(p.n)}</b><small>${p.lastMine?`<span class="receipt ${p.lastRead?'read':''}">${p.lastRead?'✓✓':'✓'}</span>`:''}${esc(p.lastMessage||'Напиши первым')}</small></div>${p.unread?'<span class="dot"></span>':''}</button>`).join('');
@@ -948,7 +948,7 @@ const _go=go;go=v=>{_go(v);if(TG)try{v==='chat'?TG.BackButton.show():TG.BackButt
 const _sw=swipe;swipe=(y,s)=>{hap('i',y?'medium':'light');return _sw(y,s)};
 const _mt=match;match=(p,u)=>{hap('n','success');return _mt(p,u)};
 document.addEventListener('click',e=>{const a=e.target.closest('a[href^="https://t.me/"]');if(a&&TG&&TG.openTelegramLink){e.preventDefault();TG.openTelegramLink(a.href)}});
-async function pollUnread(){if(document.hidden||!S.me||view==='chat')return;try{const r=await fetch('/api/chats',{credentials:'same-origin',cache:'no-store'});if(!r.ok)return;const d=await r.json();S.unread={};(d.chats||[]).forEach(p=>{if(p.unread)S.unread[p.id]=1});badge()}catch(e){}}
+async function pollUnread(){if(document.hidden||!S.me||view==='chat')return;try{const r=await fetch('/api/chats',{credentials:'same-origin',cache:'no-store'});if(!r.ok)return;const d=await r.json();S.unread={};(d.chats||[]).forEach(p=>{if(p.unread)S.unread[p.id]=Number(p.unread)||0});badge()}catch(e){}}
 setInterval(pollUnread,30000);setInterval(pingPresence,30000);
 document.addEventListener('visibilitychange',()=>{document.body.classList.toggle('pz',document.hidden);if(document.hidden)flush();else{pingPresence();if(view==='chat'&&cur!=null){loadMessages(true);refreshPeerPresence(cur)}}});
 (async()=>{if(TG)try{const ar=await fetch('/api/auth/webapp',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({initData:TG.initData})});if(ar.ok){const ad=await ar.json();if(ad.account)S.email=ad.account;S.telegramUsername=ad.username||''}}catch(e){}try{const r=await fetch('/api/profiles/me',{credentials:'same-origin',cache:'no-store'});if(r.ok){const d=await r.json();S.email=S.email||'Telegram';S.me=d.profile||null;S.out=0;save();pingPresence();if(S.me){go('feed');pollUnread()}else form(0);return;}}catch(e){}go('auth')})();
