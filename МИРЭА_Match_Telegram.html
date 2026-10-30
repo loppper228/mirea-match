@@ -495,6 +495,60 @@ button,.chip,.rb{touch-action:manipulation}
 .nav button:not([data-v="feed"]):active i{transform:scale(.9)}
 @media(max-width:360px){.nav{min-height:84px;padding-left:4px;padding-right:4px}.nav button{font-size:9px}.nav button[data-v="feed"] i{width:54px;height:54px}}
 @media(prefers-reduced-motion:reduce){.nav button,.nav button i{transition:none}}
+
+/* Day theme repair: replace hard-coded night surfaces in the redesigned UI. */
+:root[data-theme="day"]{--bgm:#fff3eb;--bg:#fff1e6;--card:#fffaf6;--card2:#ffe9db;--ink:#35221c;--mut:#896f65;--line:rgba(150,80,50,.16)}
+:root[data-theme="day"],:root[data-theme="day"] body{background:#fff3eb!important;color:#35221c}
+:root[data-theme="day"] #app{background:linear-gradient(180deg,#fffaf6 0%,#fff1e6 100%)!important;color:#35221c}
+:root[data-theme="day"] .top{background:rgba(255,250,246,.96);border-color:rgba(150,80,50,.12)}
+:root[data-theme="day"] .logo{color:#803e2c!important;-webkit-text-fill-color:#803e2c!important}
+:root[data-theme="day"] .logo::after{color:#896f65!important;-webkit-text-fill-color:#896f65!important;background:#fffaf6!important;border-color:rgba(150,80,50,.18)!important}
+:root[data-theme="day"] .nav{background:rgba(255,250,246,.97);border-color:rgba(150,80,50,.15);box-shadow:0 -8px 26px rgba(95,54,35,.1)}
+:root[data-theme="day"] .nav button{color:#8c6f66}
+:root[data-theme="day"] .nav button.on:not([data-v="feed"]){color:#bd6244}
+:root[data-theme="day"] .nav button[data-v="feed"]{color:#bd6244}
+:root[data-theme="day"] .nav button[data-v="feed"] i{background:#ffb38a;color:#321a16;box-shadow:0 0 0 6px #fffaf6,0 8px 20px rgba(160,80,50,.16)}
+:root[data-theme="day"] .nav button[data-v="feed"] i svg{stroke:#321a16}
+:root[data-theme="day"] .filterbar{background:#fffaf6;border-color:rgba(150,80,50,.16);color:#35221c;box-shadow:0 4px 14px rgba(95,54,35,.08)}
+:root[data-theme="day"] .filterbar>svg:first-child{stroke:#bd6244}
+:root[data-theme="day"] .filterbar .filter-chevron{stroke:#896f65}
+:root[data-theme="day"] .filter-panel{background:#fffaf6;border-color:rgba(150,80,50,.16);box-shadow:0 -16px 45px rgba(95,54,35,.2)}
+:root[data-theme="day"] .filter-head{color:#35221c}
+:root[data-theme="day"] .filter-x{background:#ffe9db;color:#8b4935}
+:root[data-theme="day"] .filter-caption{color:#896f65}
+:root[data-theme="day"] .filter-panel .chip{background:#fff1e6;color:#896f65;border-color:rgba(150,80,50,.15)}
+:root[data-theme="day"] .filter-panel .chip.on{background:#ffb38a;color:#321a16}
+:root[data-theme="day"] .filter-apply{background:#ffb38a;color:#321a16}
+:root[data-theme="day"] .card{background:#fff3eb;border-color:rgba(150,80,50,.18);box-shadow:0 14px 30px rgba(95,54,35,.14)}
+:root[data-theme="day"] .ph{background-color:#ffe7d8!important;background-image:radial-gradient(ellipse at 50% 22%,#ffd2b5 0%,#f7bfa6 45%,#ecc1ad 100%);color:#8b4935}
+:root[data-theme="day"] .ph.img{background-color:#f5d6c4!important}
+:root[data-theme="day"] .ph.img:not([style*="background-image"]){background-image:radial-gradient(ellipse at 50% 25%,#f2c4aa,#ffe7d8 75%)!important}
+:root[data-theme="day"] .shade{background:linear-gradient(180deg,rgba(50,25,20,.06) 0%,transparent 34%,rgba(50,25,20,.08) 48%,rgba(35,17,15,.8) 100%)}
+:root[data-theme="day"] .row{border-bottom-color:rgba(150,80,50,.14)}
+:root[data-theme="day"] .row b{color:#35221c}
+:root[data-theme="day"] .row small{color:#896f65}
+:root[data-theme="day"] .av{border-color:rgba(150,80,50,.18)!important;color:#704434!important}
+:root[data-theme="day"] .sec,:root[data-theme="day"] .like-row{background:#fffaf6;border-color:rgba(150,80,50,.15);box-shadow:0 8px 22px rgba(95,54,35,.08)}
+:root[data-theme="day"] .form h1,:root[data-theme="day"] .auth h1{color:#35221c}
+:root[data-theme="day"] .form p.s,:root[data-theme="day"] .lbl{color:#896f65}
+:root[data-theme="day"] .fld,:root[data-theme="day"] .send input{background:#fffaf6!important;border-color:rgba(150,80,50,.18)!important;color:#35221c!important}
+:root[data-theme="day"] .fld::placeholder,:root[data-theme="day"] .send input::placeholder{color:#9c8176}
+:root[data-theme="day"] .ph-up{background:#fffaf6;border-color:#d79b80;color:#a9583b}
+:root[data-theme="day"] .sw i{background:#ead8ce;border-color:rgba(150,80,50,.12)}
+:root[data-theme="day"] .sw.on i{background:#ffb38a}
+:root[data-theme="day"] .sw.on i:after{background:#70402e}
+:root[data-theme="day"] .ok{color:#a9583b}
+:root[data-theme="day"] .btn,:root[data-theme="day"] .tg button,:root[data-theme="day"] .tg a,:root[data-theme="day"] .like-row button{background:#ffb38a;color:#321a16}
+:root[data-theme="day"] #v-chat .back{background:#fff1e6!important;color:#a9583b!important;border-color:rgba(150,80,50,.16)!important}
+:root[data-theme="day"] #v-chat .msgs>.m.t{background:#fffaf6!important;color:#35221c!important;border-color:rgba(150,80,50,.13)!important;box-shadow:0 2px 6px rgba(95,54,35,.07)!important}
+:root[data-theme="day"] #v-chat .msgs>.m.t .mtime{color:#896f65!important}
+:root[data-theme="day"] #v-chat .msgs>.m.m{background:#ffd0ad!important;color:#321a16!important}
+:root[data-theme="day"] #v-chat .msgs>.m.m .mtime{color:rgba(50,26,22,.68)!important}
+:root[data-theme="day"] #v-chat .qr .chip{background:#fffaf6!important;color:#704434!important;border-color:rgba(150,80,50,.15)!important}
+:root[data-theme="day"] #v-chat .send button{background:#ffb38a!important;color:#321a16!important}
+:root[data-theme="day"] .toast{background:#fffaf6;color:#35221c;border-color:rgba(150,80,50,.16)}
+:root[data-theme="day"] .filter-backdrop{background:rgba(66,38,28,.4)}
+@media(max-width:600px){:root[data-theme="day"] .nav{background:rgba(255,250,246,.98)}}
 </style>
 </head>
 <body>
