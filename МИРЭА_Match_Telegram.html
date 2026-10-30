@@ -676,6 +676,23 @@ button,.chip,.rb{touch-action:manipulation}
 .safety-reason{display:block;width:100%;padding:13px 12px;margin-top:7px;border:1px solid var(--line);border-radius:13px;background:var(--bg);text-align:left;font-size:14px}
 .safety-reason:active,.safety-option:active{transform:scale(.985)}
 .safety-back{margin-top:12px;padding:10px 2px;color:var(--mut);font-weight:700}
+
+/* Superlike celebration */
+#v-feed .rb.st.super-burst{position:relative;z-index:2;color:#fff2a0;animation:superButtonPop .72s cubic-bezier(.2,.9,.25,1.25);box-shadow:0 0 0 0 rgba(255,205,72,.55),0 0 34px rgba(255,185,44,.75)}
+#v-feed .rb.st.super-burst::after{content:'';position:absolute;inset:-8px;border:2px solid rgba(255,220,100,.9);border-radius:50%;animation:superRing .7s ease-out forwards;pointer-events:none}
+@keyframes superButtonPop{0%{transform:scale(1)}24%{transform:scale(1.38) rotate(-12deg)}48%{transform:scale(.88) rotate(10deg)}72%{transform:scale(1.17) rotate(-4deg)}100%{transform:scale(1)}}
+@keyframes superRing{from{transform:scale(.55);opacity:1}to{transform:scale(1.8);opacity:0}}
+.super-fx{position:absolute;inset:0;z-index:8;display:grid;place-items:center;overflow:hidden;border-radius:30px;pointer-events:none;animation:superFxOut .78s ease-out forwards}
+.super-fx::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 46%,rgba(255,220,95,.42),rgba(255,179,46,.18) 22%,transparent 63%);animation:superFlash .72s ease-out forwards}
+.super-fx .super-badge{position:absolute;left:50%;top:44%;display:grid;justify-items:center;gap:2px;transform:translate(-50%,-50%);filter:drop-shadow(0 5px 14px rgba(0,0,0,.32));animation:superBadge .72s cubic-bezier(.2,.9,.25,1.25) forwards}
+.super-fx .super-badge span{font-size:clamp(56px,16vw,88px);line-height:1}
+.super-fx .super-badge b{padding:6px 13px;border:1px solid rgba(255,255,255,.5);border-radius:99px;background:linear-gradient(135deg,#ffe982,#ffb83f);color:#522b12;font-size:12px;font-weight:900;letter-spacing:.12em;white-space:nowrap}
+.super-fx .super-particle{position:absolute;left:50%;top:44%;color:#ffe47c;font-style:normal;font-size:23px;text-shadow:0 2px 10px rgba(255,178,40,.7);animation:superParticle .72s cubic-bezier(.15,.65,.2,1) var(--delay) both}
+@keyframes superFlash{0%{opacity:0;transform:scale(.3)}25%{opacity:1;transform:scale(1.05)}100%{opacity:0;transform:scale(1.5)}}
+@keyframes superBadge{0%{opacity:0;scale:.15;rotate:-22deg}28%{opacity:1;scale:1.16;rotate:8deg}50%{scale:.94;rotate:-4deg}72%{opacity:1;scale:1;rotate:0}100%{opacity:0;scale:1.35;translate:0 -10px}}
+@keyframes superParticle{0%{opacity:0;transform:translate(0,0) scale(.15) rotate(0)}25%{opacity:1;transform:translate(calc(var(--x)*.35),calc(var(--y)*.35)) scale(1.2) rotate(70deg)}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(.25) rotate(230deg)}}
+@keyframes superFxOut{0%,72%{opacity:1}100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){#v-feed .rb.st.super-burst,.super-fx,.super-fx::before,.super-fx .super-badge,.super-fx .super-particle{animation-duration:.01ms!important}}
 </style>
 </head>
 <body>
@@ -778,14 +795,15 @@ function drag(el){let sx,sy,dx=0,on=0;const L=el.querySelector('.like'),N=el.que
     el.style.transform=`translate(${dx}px,${dy*.3}px) rotate(${dx/18}deg)`;L.style.opacity=Math.max(0,dx/100);N.style.opacity=Math.max(0,-dx/100)};
   el.onpointerup=el.onpointercancel=()=>{if(!on)return;on=0;el.style.transition='';
     if(dx>110)swipe(1);else if(dx<-110)swipe(0);else{el.style.transform='';L.style.opacity=N.style.opacity=0}dx=0}}
+function playSuperLike(){const b=$('#bs'),deck=$('#deck');b.classList.remove('super-burst');void b.offsetWidth;b.classList.add('super-burst');setTimeout(()=>b.classList.remove('super-burst'),760);const fx=document.createElement('div'),rays=[[-105,-76],[-55,-118],[0,-128],[55,-116],[108,-72],[119,0],[84,78],[35,112],[-40,110],[-92,72],[-122,8],[-18,-82]];fx.className='super-fx';fx.innerHTML='<div class="super-badge"><span>⭐</span><b>СУПЕРЛАЙК</b></div>'+rays.map(([x,y],i)=>'<i class="super-particle" style="--x:'+x+'px;--y:'+y+'px;--delay:'+(i*18)+'ms">'+(i%3?'✦':'★')+'</i>').join('');deck.appendChild(fx);setTimeout(()=>fx.remove(),820)}
 async function swipe(y,sup){
   const el=$('#deck').lastElementChild;if(!el||!el.classList.contains('card')||el.dataset.gone)return;el.dataset.gone=1;
-  const id=+el.dataset.id,p=person(id);el.querySelector(y?'.like':'.nope').style.opacity=1;
+  const id=+el.dataset.id,p=person(id);if(sup)playSuperLike();el.querySelector(y?'.like':'.nope').style.opacity=1;
   el.style.transition='transform .45s ease-in,opacity .45s';el.style.transform=`translate(${y?700:-700}px,-40px) rotate(${y?30:-30}deg)`;el.style.opacity=0;
   const nx=el.previousElementSibling;if(nx){nx.style.transition='transform .35s';nx.style.transform='none'}
   S.seen.push(id);S.hist.push(id);if(y)S.likes++;if(sup)S.sl--;save();
   let likeResult=null;if(y&&p){try{const lr=await fetch('/api/likes',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({profileId:id})});likeResult=await lr.json();if(!lr.ok)throw new Error(likeResult.error||'Не удалось сохранить лайк');}catch(e){toast(e.message||'Не удалось сохранить лайк');}}
-  setTimeout(()=>{feed();if(y&&likeResult&&likeResult.mutual)match(p,likeResult.mutualUsername)},420);
+  setTimeout(()=>{feed();if(y&&likeResult&&likeResult.mutual)match(p,likeResult.mutualUsername)},sup?720:420);
 }
 function match(p,mutualUsername){
   if(p&&mutualUsername)p.telegramUsername=mutualUsername;
