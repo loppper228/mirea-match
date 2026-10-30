@@ -799,7 +799,7 @@ function badge(){const n=Object.values(S.unread||{}).reduce((sum,count)=>sum+(Nu
 async function refreshProfiles(){
   try{const r=await fetch('/api/profiles',{credentials:'same-origin',cache:'no-store'});if(!r.ok)throw new Error('Не удалось загрузить анкеты');const d=await r.json();P=Array.isArray(d.profiles)?d.profiles:[];}catch(e){P=[];toast('Не удалось загрузить анкеты. Проверь подключение к серверу.');}
 }
-function updateFilterLabel(){const campus=!flt.length?'Все корпуса':flt.length<=2?flt.map(i=>C[i]).join(' + '):flt.length+' корпуса',course=!fk.length?'Все курсы':fk.length<=2?fk.map(i=>i+' курс').join(', '):fk.length+' курса',el=$('#filter-label');if(el)el.textContent=campus+' · '+course;}
+function updateFilterLabel(){const campus=!flt.length?'Все корпуса':flt.length<=2?flt.map(i=>C[i]).join(' + '):flt.length+' корпуса',course=!fk.length?'Все курсы':fk.length<=2?fk.map(i=>i+' курс').join(', '):fk.length<=4?fk.length+' курса':fk.length+' курсов',el=$('#filter-label');if(el)el.textContent=campus+' · '+course;}
 async function feed(force){
   if(force||!P.length)await refreshProfiles();
   $('#flt').innerHTML=['Все корпуса',...C].map((t,i)=>{const value=i-1,active=value<0?!flt.length:flt.includes(value);return `<button class="chip ${active?'on':''}" aria-pressed="${active}" data-i="${value}">${t}</button>`}).join('');
