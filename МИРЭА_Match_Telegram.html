@@ -15,7 +15,7 @@ html,body{height:100%}
 body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bgm);background-attachment:fixed;color:var(--ink);overflow:hidden}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer;border:0;background:none}
-.blob{position:fixed;border-radius:50%;filter:blur(70px);opacity:.4;animation:fl 12s ease-in-out infinite alternate;z-index:0}
+.blob{position:fixed;border-radius:50%;filter:blur(50px);will-change:transform;opacity:.4;animation:fl 12s ease-in-out infinite alternate;z-index:0}
 @keyframes fl{to{transform:translate(60px,50px) scale(1.2)}}
 #app{position:relative;z-index:1;max-width:480px;height:100%;margin:0 auto;display:flex;flex-direction:column}
 .top{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 6px}
@@ -248,6 +248,19 @@ textarea.fld{resize:none;height:90px}
 #v-chat .msgs{align-items:stretch!important}
 #v-chat .msgs>.m.incoming{align-self:flex-start!important;margin-left:0!important;margin-right:auto!important}
 #v-chat .msgs>.m.outgoing{align-self:flex-end!important;margin-left:auto!important;margin-right:0!important}
+/* RECEIPTS + PERF */
+#v-chat .msgs>.m{animation:none!important}
+#v-chat .msgs>.m.nw{animation:chatBubbleIn .18s ease-out!important}
+#v-chat .msgs>.m .mtime{opacity:1!important}
+#v-chat .msgs>.m.m .mtime{color:#5d7d6c}
+:root[data-theme=dark] #v-chat .msgs>.m.m .mtime{color:rgba(210,244,229,.72)}
+.mtime .receipt.read{color:#1687e8!important;text-shadow:0 0 .5px rgba(22,135,232,.5)}
+:root[data-theme=dark] .mtime .receipt.read{color:#5db3ff!important}
+.row small .receipt{display:inline-block;margin-right:6px;font-size:13px;font-weight:700;letter-spacing:-3px;color:#8b949e}
+.row small .receipt.read{color:#1687e8}
+.card:not(:last-child) .ph{animation:none}
+body.pz *{animation-play-state:paused!important}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
@@ -286,7 +299,7 @@ const R=['Ха, понятно 😄','Расскажи подробнее!','М�
 const K='mirea-match-v1';
 const DF=()=>({email:null,out:0,me:null,tg:'',share:0,theme:'',sl:3,likes:0,hist:[],seen:[],matches:[],chats:{},unread:{}});let S=DF(),flt=-1,fk=0,cur=null,ty=null,view='form',F={};
 try{const j=localStorage.getItem(K);if(j)S=Object.assign(S,JSON.parse(j))}catch(e){}
-const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+let st;const flush=()=>{clearTimeout(st);try{localStorage.setItem(K,JSON.stringify({...S,chats:{}}))}catch(e){}};const save=()=>{clearTimeout(st);st=setTimeout(flush,400)};addEventListener('pagehide',flush);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const bg=p=>p.img?`background-image:url(${p.img})`:`background:linear-gradient(160deg,hsl(${p.h} 85% 62%),hsl(${(p.h+55)%360} 75% 42%))`;
 const av=(p,c='')=>`<div class="av ${c}" style="${bg(p)}">${p.img?'':p.e||esc(p.n[0])}</div>`;
@@ -299,7 +312,7 @@ function go(v){
   view=v;if(v!=='chat'&&chatPoll){clearInterval(chatPoll);chatPoll=null;}document.querySelectorAll('.view').forEach(e=>e.classList.toggle('on',e.id=='v-'+v));
   document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.v==v||(v==='likes'&&((likesMode==='received'&&b.dataset.v==='likes-received')||(likesMode==='sent'&&b.dataset.v==='likes-sent')))));
   $('#app').classList.toggle('nonav',['form','chat','auth'].includes(v));
-  if(v=='feed')feed();if(v=='chats')chats();if(v=='prof')prof();if(v=='likes')loadLikes();badge();
+  if(v=='feed')feed(true);if(v=='chats')chats();if(v=='prof')prof();if(v=='likes')loadLikes();badge();
 }
 function badge(){const n=Object.keys(S.unread).length;$('#bd').hidden=!n;$('#bd').textContent=n}
 
@@ -307,8 +320,8 @@ function badge(){const n=Object.keys(S.unread).length;$('#bd').hidden=!n;$('#bd'
 async function refreshProfiles(){
   try{const r=await fetch('/api/profiles',{credentials:'same-origin',cache:'no-store'});if(!r.ok)throw new Error('Не удалось загрузить анкеты');const d=await r.json();P=Array.isArray(d.profiles)?d.profiles:[];}catch(e){P=[];toast('Не удалось загрузить анкеты. Проверь подключение к серверу.');}
 }
-async function feed(){
-  await refreshProfiles();
+async function feed(force){
+  if(force||!P.length)await refreshProfiles();
   $('#flt').innerHTML=['Все корпуса',...C].map((t,i)=>`<button class="chip ${flt==i-1?'on':''}" data-i="${i-1}">${t}</button>`).join('');
   $('#flk').innerHTML=['Все курсы',1,2,3,4,5,6].map((k,i)=>`<button class='chip ${fk==i?'on':''}' data-k2='${i}'>${i?k+' курс':k}</button>`).join('');const q=P.filter(p=>!S.seen.includes(p.id)&&(flt<0||p.c==flt)&&(!fk||p.k==fk)),d=$('#deck');d.innerHTML='';
   if(!q.length){d.innerHTML='<div class="empty"><b>🔒</b><div>Пока нет реальных анкет авторизованных пользователей.<br>Демо-анкеты отключены.</div></div>';return}
@@ -346,16 +359,19 @@ function match(p,mutualUsername){
 let chatProfiles=[], chatPoll=null, chatLoading=false;
 async function chats(){
   const l=$('#list');l.innerHTML='<div class="none">Загружаю чаты…</div>';
-  try{const r=await fetch('/api/chats',{credentials:'same-origin',cache:'no-store'});const d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось загрузить чаты');chatProfiles=Array.isArray(d.chats)?d.chats:[];
+  try{const r=await fetch('/api/chats',{credentials:'same-origin',cache:'no-store'});const d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось загрузить чаты');chatProfiles=Array.isArray(d.chats)?d.chats:[];S.unread={};chatProfiles.forEach(p=>{if(p.unread)S.unread[p.id]=1});badge();
     for(const p of chatProfiles)if(!P.some(x=>x.id===p.id))P.push(p);
     if(!chatProfiles.length){l.innerHTML='<div class="none">Пока нет взаимных лайков 💫<br>Чат откроется, когда вы понравитесь друг другу.</div>';return;}
-    l.innerHTML=chatProfiles.map((p,i)=>`<button class="row" data-id="${p.id}" style="animation-delay:${i*60}ms">${av(p)}<div><b>${esc(p.n)}</b><small>${esc(p.lastMessage||'Напиши первым')}</small></div></button>`).join('');
+    l.innerHTML=chatProfiles.map((p,i)=>`<button class="row" data-id="${p.id}" style="animation-delay:${i*60}ms">${av(p)}<div><b>${esc(p.n)}</b><small>${p.lastMine?`<span class="receipt ${p.lastRead?'read':''}">${p.lastRead?'✓✓':'✓'}</span>`:''}${esc(p.lastMessage||'Напиши первым')}</small></div>${p.unread?'<span class="dot"></span>':''}</button>`).join('');
   }catch(e){l.innerHTML=`<div class="none">${esc(e.message||'Не удалось загрузить чаты')}</div>`;}
 }
-async function openChat(id){cur=id;const p=person(id)||chatProfiles.find(x=>x.id===id);if(!p)return toast('Анкета чата не найдена');if(chatPoll)clearInterval(chatPoll);$('#chav').innerHTML=av(p);$('#chn').textContent=p.n;$('#qr').innerHTML=['👋 Привет!','☕ Кофе после пар?','🏢 Какой корпус лучше?'].map((q,i)=>`<button class='chip' data-q='${i}'>${q}</button>`).join('');go('chat');await loadMessages();chatPoll=setInterval(()=>{if(view==='chat'&&cur===id)loadMessages(true)},4000);setTimeout(()=>$('#inp').focus(),50)}
-async function loadMessages(quiet=false){if(cur==null||chatLoading)return;chatLoading=true;try{const r=await fetch('/api/messages?profileId='+encodeURIComponent(cur),{credentials:'same-origin',cache:'no-store'});const d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось загрузить сообщения');const old=$('#msgs').scrollTop,nearBottom=$('#msgs').scrollHeight-$('#msgs').clientHeight-old<80;S.chats[cur]=d.messages||[];msgs();if(!nearBottom&&!quiet)$('#msgs').scrollTop=$('#msgs').scrollHeight;}catch(e){if(!quiet)toast(e.message||'Ошибка загрузки чата')}finally{chatLoading=false}}
-function msgs(){const m=$('#msgs');m.innerHTML=(S.chats[cur]||[]).map(x=>{const mine=x.mine===true||x.w==='m';const d=x.createdAt?new Date(x.createdAt):null;const tm=d&&!Number.isNaN(d.getTime())?d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):'';return `<div class="m ${mine?'m':'t'} ${mine?'outgoing':'incoming'}" data-message-side="${mine?'outgoing':'incoming'}">${esc(x.t)}${tm?`<span class="mtime">${tm}${mine?`<span class="receipt ${x.readAt?'read':''}" title="${x.readAt?'Прочитано':'Отправлено'}">${x.readAt?'✓✓':'✓'}</span>`:''}</span>`:''}</div>`}).join('')+(ty==cur?'<div class="m t ty incoming"><s></s><s></s><s></s></div>':'');m.scrollTop=m.scrollHeight;}
-async function send(x){const i=$('#inp'),text=typeof x==='string'?x:i.value.trim();if(!text||cur==null)return;if(text.length>2000)return toast('Максимум 2000 символов');if(typeof x!=='string')i.value='';try{const r=await fetch('/api/messages?profileId='+encodeURIComponent(cur),{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({text})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось отправить сообщение');S.chats[cur]=[...(S.chats[cur]||[]),d.message];msgs();}catch(e){toast(e.message||'Не удалось отправить сообщение')}}
+let msgSig='',msgCur=null,shown=0,shownFor=null;
+async function openChat(id){cur=id;const p=person(id)||chatProfiles.find(x=>x.id===id);if(!p)return toast('Анкета чата не найдена');if(chatPoll)clearInterval(chatPoll);msgSig='';delete S.unread[id];badge();$('#chav').innerHTML=av(p);$('#chn').textContent=p.n;$('#qr').innerHTML=['👋 Привет!','☕ Кофе после пар?','🏢 Какой корпус лучше?'].map((q,i)=>`<button class='chip' data-q='${i}'>${q}</button>`).join('');go('chat');await loadMessages();chatPoll=setInterval(()=>{if(view==='chat'&&cur===id&&!document.hidden)loadMessages(true)},3000);setTimeout(()=>$('#inp').focus(),50)}
+async function loadMessages(quiet=false){if(cur==null||chatLoading)return;chatLoading=true;const id=cur;try{const vis=document.visibilityState==='visible';const r=await fetch('/api/messages?profileId='+encodeURIComponent(id)+(vis?'&read=1':'')+(msgSig&&msgCur===id?'&sig='+encodeURIComponent(msgSig):''),{credentials:'same-origin',cache:'no-store'});const d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось загрузить сообщения');if(cur!==id||d.same)return;msgSig=d.sig;msgCur=id;S.chats[id]=d.messages||[];msgs();}catch(e){if(!quiet)toast(e.message||'Ошибка загрузки чата')}finally{chatLoading=false}}
+function msgs(){const m=$('#msgs'),L=S.chats[cur]||[];if(shownFor!==cur){shownFor=cur;shown=L.length}const stick=!m.childElementCount||m.scrollHeight-m.clientHeight-m.scrollTop<90;
+  m.innerHTML=L.map((x,i)=>{const mine=x.mine===true||x.w==='m';const d=x.createdAt?new Date(x.createdAt):null;const tm=d&&!Number.isNaN(d.getTime())?d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):'';const rd=!!x.readAt;return `<div class="m ${mine?'m':'t'} ${mine?'outgoing':'incoming'}${i>=shown?' nw':''}" data-message-side="${mine?'outgoing':'incoming'}">${esc(x.t)}${tm?`<span class="mtime">${tm}${mine?`<span class="receipt ${rd?'read':''}" title="${rd?'Прочитано':'Отправлено'}">${rd?'✓✓':'✓'}</span>`:''}</span>`:''}</div>`}).join('');
+  shown=L.length;if(stick)m.scrollTop=m.scrollHeight}
+async function send(x){const i=$('#inp'),text=typeof x==='string'?x:i.value.trim();if(!text||cur==null)return;if(text.length>2000)return toast('Максимум 2000 символов');if(typeof x!=='string')i.value='';const id=cur;try{const r=await fetch('/api/messages?profileId='+encodeURIComponent(id),{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({text})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось отправить сообщение');if(cur===id){S.chats[id]=[...(S.chats[id]||[]),d.message];msgs();const m=$('#msgs');m.scrollTop=m.scrollHeight;msgSig='';setTimeout(()=>{if(view==='chat'&&cur===id)loadMessages(true)},1500)}}catch(e){if(typeof x!=='string')i.value=text;toast(e.message||'Не удалось отправить сообщение')}}
 
 /* разделы лайков: данные берутся с сервера, а не из localStorage */
 async function loadLikes(){
@@ -445,7 +461,10 @@ $('#pf').onchange=e=>{const f=e.target.files[0];if(f)readPhoto(f,d=>{F.img=d;pho
 $('#fs').onclick=submit;$('#ed').onclick=()=>form(1);
 $('#rs').onclick=()=>{if(confirm('Удалить анкету, лайки и чаты?')){try{localStorage.removeItem(K)}catch(e){}
   S=Object.assign(DF(),{email:S.email});form(0)}};
-const Q=['Привет! 👋','Кофе после пар? ☕','Какой корпус МИРЭА лучше? 🏢'];if(S.theme)document.documentElement.dataset.theme=S.theme;$('#ab').onclick=auth;$('#av').onclick=auth;$('#ac').onkeydown=e=>{if(e.key=='Enter')auth()};$('#lo').onclick=async()=>{try{await fetch('/api/auth/logout',{method:'POST',credentials:'same-origin'})}catch(e){}S=Object.assign(DF(),{out:1});save();authToken=null;$('#ac').value='';$('#ac').style.display='none';$('#av').style.display='none';$('#ab').textContent='Получить код в Telegram';$('#authhint').textContent='';go('auth')};for(let i=0;i<14;i++){const s=document.createElement('span');s.className='fl';s.textContent=['♥','✦','♡','✧'][i%4];s.style.cssText=`left:${Math.random()*100}vw;font-size:${14+Math.random()*22}px;animation-duration:${14+Math.random()*16}s;animation-delay:-${Math.random()*20}s;color:var(--${i%2?'a':'b'})`;document.body.prepend(s)}(async()=>{try{const r=await fetch('/api/profiles/me',{credentials:'same-origin',cache:'no-store'});if(r.ok){const d=await r.json();S.email=S.email||'Telegram';S.me=d.profile||null;S.out=0;save();if(S.me)go('feed');else form(0);return;}}catch(e){}go('auth')})();
+const Q=['Привет! 👋','Кофе после пар? ☕','Какой корпус МИРЭА лучше? 🏢'];if(S.theme)document.documentElement.dataset.theme=S.theme;$('#ab').onclick=auth;$('#av').onclick=auth;$('#ac').onkeydown=e=>{if(e.key=='Enter')auth()};$('#lo').onclick=async()=>{try{await fetch('/api/auth/logout',{method:'POST',credentials:'same-origin'})}catch(e){}S=Object.assign(DF(),{out:1});save();authToken=null;$('#ac').value='';$('#ac').style.display='none';$('#av').style.display='none';$('#ab').textContent='Получить код в Telegram';$('#authhint').textContent='';go('auth')};for(let i=0;i<(matchMedia('(max-width:600px)').matches?7:14);i++){const s=document.createElement('span');s.className='fl';s.textContent=['♥','✦','♡','✧'][i%4];s.style.cssText=`left:${Math.random()*100}vw;font-size:${14+Math.random()*22}px;animation-duration:${14+Math.random()*16}s;animation-delay:-${Math.random()*20}s;color:var(--${i%2?'a':'b'})`;document.body.prepend(s)}async function pollUnread(){if(document.hidden||!S.me||view==='chat')return;try{const r=await fetch('/api/chats',{credentials:'same-origin',cache:'no-store'});if(!r.ok)return;const d=await r.json();S.unread={};(d.chats||[]).forEach(p=>{if(p.unread)S.unread[p.id]=1});badge()}catch(e){}}
+setInterval(pollUnread,30000);
+document.addEventListener('visibilitychange',()=>{document.body.classList.toggle('pz',document.hidden);if(document.hidden)flush();else if(view==='chat'&&cur!=null)loadMessages(true)});
+(async()=>{try{const r=await fetch('/api/profiles/me',{credentials:'same-origin',cache:'no-store'});if(r.ok){const d=await r.json();S.email=S.email||'Telegram';S.me=d.profile||null;S.out=0;save();if(S.me){go('feed');pollUnread()}else form(0);return;}}catch(e){}go('auth')})();
 </script>
 </body>
 </html>
