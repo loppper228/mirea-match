@@ -649,6 +649,8 @@ button,.chip,.rb{touch-action:manipulation}
 #v-form .edit-chips .chip.on{background:linear-gradient(135deg,var(--a),var(--b));border-color:transparent;color:#fff}
 #v-form .edit-direction{margin:13px 0}
 #v-form .edit-about textarea{height:112px;padding:13px;border-radius:14px;line-height:1.5}
+#v-form .bio-count{margin-top:7px;text-align:right;color:var(--mut);font-size:11px;font-weight:700;font-variant-numeric:tabular-nums}
+#v-form .bio-count.limit{color:#e47771}
 #v-form #fs{margin-top:4px}
 @media(max-width:360px){#v-form .edit-section{padding:13px}#v-form .edit-fields{grid-template-columns:minmax(0,1fr) 82px}}
 </style>
@@ -685,7 +687,7 @@ button,.chip,.rb{touch-action:manipulation}
 <section class="edit-section"><div class="edit-section-head"><span class="edit-step">01</span><div><h2>Основное</h2><small>Как к тебе обращаться?</small></div></div><div class="edit-fields"><label class="edit-field"><span>Имя</span><input class="fld" id="fn" maxlength="24" placeholder="Например, Аня"></label><label class="edit-field edit-age"><span>Возраст</span><input class="fld" id="fa" type="number" min="16" max="40" placeholder="19"></label></div></section>
 <section class="edit-section"><div class="edit-section-head"><span class="edit-step">02</span><div><h2>Учёба</h2><small>Поможет найти своих</small></div></div><span class="edit-label">Корпус</span><div class="grid edit-chips" id="fc"></div><label class="edit-field edit-direction"><span>Направление</span><select class="fld" id="fd"></select></label><span class="edit-label">Курс</span><div class="grid edit-chips" id="fk"></div></section>
 <section class="edit-section"><div class="edit-section-head"><span class="edit-step">03</span><div><h2>Интересы</h2><small>Выбери до трёх</small></div></div><div class="grid edit-chips" id="fi"></div></section>
-<section class="edit-section edit-about"><div class="edit-section-head"><span class="edit-step">04</span><div><h2>О себе</h2><small>Что тебе нравится?</small></div></div><textarea class="fld" id="fb" maxlength="200" placeholder="Расскажи о своих увлечениях, любимых местах или идеальном выходном…"></textarea></section>
+<section class="edit-section edit-about"><div class="edit-section-head"><span class="edit-step">04</span><div><h2>О себе</h2><small>Что тебе нравится?</small></div></div><textarea class="fld" id="fb" maxlength="200" placeholder="Расскажи о своих увлечениях, любимых местах или идеальном выходном…"></textarea><div class="bio-count" id="bio-count">0 / 200</div></section>
 <button class="btn" id="fs">Начать знакомиться</button></div></section>
 </main>
 <nav class="nav"><button data-v="likes-received"><i><svg viewBox='0 0 24 24'><path d='M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7z'/></svg></i><span>Лайки</span></button><button data-v="matches"><i><svg viewBox='0 0 24 24'><path d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'/><circle cx='9' cy='7' r='4'/><path d='M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8'/></svg></i><span>Мэтчи</span></button><button data-v="feed" class="on"><i><svg viewBox='0 0 24 24'><path d='M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1.1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3a2.5 2.5 0 0 0 2.5 2.5z'/></svg></i><span>Лента</span></button><button data-v="chats"><i><svg viewBox='0 0 24 24'><path d='M7.9 20A9 9 0 1 0 4 16.1L2 22z'/></svg></i><span>Чаты</span><span class="bd" id="bd" hidden></span></button><button data-v="prof"><i><svg viewBox='0 0 24 24'><path d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg></i><span>Профиль</span></button></nav><div class="filter-sheet" id="filter-sheet" aria-hidden="true"><button class="filter-backdrop" data-filter-close aria-label="Закрыть фильтры"></button><div class="filter-panel" role="dialog" aria-modal="true" aria-labelledby="filter-title"><div class="filter-head"><b id="filter-title">Фильтры ленты</b><button class="filter-x" data-filter-close aria-label="Закрыть">×</button></div><span class="filter-caption">Корпус</span><div class="chips" id="flt"></div><span class="filter-caption">Курс</span><div class="chips" id="flk"></div><button class="filter-apply" id="filters-done">Показать анкеты</button></div></div>
@@ -828,10 +830,11 @@ async function copyTelegramUsername(){const pm=$('#pm'),value=pm.textContent;let
 function form(edit){
   F={img:edit?S.me.img:null,c:edit?S.me.c:0,k:edit?S.me.k:1,t:edit?[...(S.me.t||[])]:[]};
   $('#ft').textContent=edit?'Редактирование анкеты':'Создай анкету';$('#form-intro').textContent=edit?'Обнови детали — они появятся в твоей анкете.':'Знакомства только для студентов РТУ МИРЭА';$('#fbk').hidden=!edit;$('#fs').hidden=false;$('#fs').textContent=edit?'Сохранить изменения':'Начать знакомиться';
-  $('#fn').value=edit?S.me.n:'';$('#fa').value=edit?S.me.a:'';$('#fb').value=edit?S.me.b:'';
+  $('#fn').value=edit?S.me.n:'';$('#fa').value=edit?S.me.a:'';$('#fb').value=edit?S.me.b:'';updateBioCount();
   $('#fd').innerHTML=D.map(d=>`<option ${edit&&S.me.d==d?'selected':''}>${d}</option>`).join('');
   fchips();fi();photo();go('form');
 }
+function updateBioCount(){const field=$('#fb'),count=$('#bio-count');count.textContent=field.value.length+' / 200';count.classList.toggle('limit',field.value.length>=200)}
 function fchips(){
   $('#fc').innerHTML=C.map((c,i)=>`<button class="chip ${F.c==i?'on':''}" data-c="${i}">${c}</button>`).join('');
   $('#fk').innerHTML=[1,2,3,4,5,6].map(k=>`<button class="chip ${F.k==k?'on':''}" data-k="${k}">${k}</button>`).join('');
@@ -865,7 +868,7 @@ $('#filter-toggle').onclick=()=>{const x=$('#filter-sheet');x.classList.add('on'
 $('#likes-back').onclick=()=>go('feed');$('#likes-list').onclick=async e=>{const b=e.target.closest('[data-like-open]');if(!b||b.disabled)return;const id=+b.dataset.likeOpen;b.disabled=true;try{const r=await fetch('/api/likes',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({profileId:id})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось поставить лайк');if(!S.seen.includes(id))S.seen.push(id);if(d.mutual&&!S.matches.includes(id))S.matches.push(id);save();b.textContent=d.mutual?'Мэтч ✓':'♥ В ответ';if(d.mutual)b.disabled=true;const p=person(id);if(d.mutual&&p)match(p,d.mutualUsername)}catch(err){b.disabled=false;toast(err.message)}};$('#bn').onclick=()=>swipe(0);$('#by').onclick=()=>swipe(1);$('#bs').onclick=()=>S.sl>0?swipe(1,1):toast('Суперлайки закончились ⭐');$('#bu').onclick=()=>{const id=S.hist.slice(-1)[0];if(!id||S.matches.includes(id))return toast('Нечего возвращать ↩');S.hist.pop();S.seen=S.seen.filter(x=>x!=id);save();flt=-1;fk=0;feed()};
 $('#bk').onclick=()=>{cur=null;go('chats')};$('#snd').onclick=send;
 $('#inp').onkeydown=e=>{if(e.key=='Enter')send()};
-$('#pf').onchange=e=>{const f=e.target.files[0];if(f)readPhoto(f,d=>{F.img=d;photo()})};
+$('#pf').onchange=e=>{const f=e.target.files[0];if(f)readPhoto(f,d=>{F.img=d;photo()})};$('#fb').oninput=updateBioCount;
 $('#fs').onclick=submit;$('#fbk').onclick=()=>go('prof');$('#ed').onclick=()=>form(1);
 $('#rs').onclick=()=>{if(confirm('Удалить анкету, лайки и чаты?')){try{localStorage.removeItem(K)}catch(e){}
   S=Object.assign(DF(),{email:S.email});form(0)}};
