@@ -613,6 +613,11 @@ button,.chip,.rb{touch-action:manipulation}
 :root[data-theme="day"] #v-prof .profile-hero{box-shadow:0 12px 28px rgba(95,54,35,.08)}
 :root[data-theme="day"] #v-prof .profile-delete{color:#bd5149}
 @media(max-width:360px){#v-prof .profile-hero{padding:15px 13px 12px}#v-prof .profile-avatar{width:66px;height:66px;font-size:29px}#v-prof .profile-name b{font-size:19px}#v-prof .profile-stats b{font-size:22px}#v-prof .pv{height:260px;min-height:260px}}
+#v-form .form-heading{display:flex;align-items:center;gap:10px;margin:6px 0 4px}
+#v-form .form-heading h1{flex:1;min-width:0;margin:0;font-size:26px}
+#v-form .form-back,#v-form .form-save{width:42px;height:42px;flex:none;display:grid;place-items:center;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);font-size:24px;font-weight:800;box-shadow:var(--sh)}
+#v-form .form-save{background:linear-gradient(135deg,var(--a),var(--b));border:0;color:#fff;font-size:25px}
+#v-form .form-back[hidden],#v-form .form-save[hidden],#v-form #fs[hidden]{display:none}
 </style>
 </head>
 <body>
@@ -641,7 +646,7 @@ button,.chip,.rb{touch-action:manipulation}
 <section class='view sc' id='v-matches'><h3 class='h'>Мэтчи</h3><div class='mgrid' id='mlist'></div></section>
 <section class='view sc' id='v-likes'><div class='chead'><button class='back' id='likes-back'>←</button><b>Кто тебя лайкнул</b></div><div id='likes-list'></div></section>
 <section class="view" id="v-form"><div class="form">
-<h1 id="ft">Создай анкету</h1><p class="s">Знакомства только для студентов РТУ МИРЭА</p>
+<div class="form-heading"><button type="button" class="form-back" id="fbk" aria-label="Назад" hidden>←</button><h1 id="ft">Создай анкету</h1><button type="button" class="form-save" id="fcheck" aria-label="Сохранить анкету" title="Сохранить" hidden>✓</button></div><p class="s">Знакомства только для студентов РТУ МИРЭА</p>
 <label class="ph-up" id="pu">+ фото<input type="file" id="pf" accept="image/*" hidden></label>
 <span class="lbl">Имя</span><input class="fld" id="fn" maxlength="24" placeholder="Как тебя зовут?">
 <span class="lbl">Возраст</span><input class="fld" id="fa" type="number" min="16" max="40" placeholder="19">
@@ -790,7 +795,7 @@ function prof(){$('#pav').innerHTML=av(S.me,'big profile-avatar');$('#pn').textC
 async function copyTelegramUsername(){const pm=$('#pm'),value=pm.textContent;let copied=false;try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(value);copied=true}}catch(e){}if(!copied){const ta=document.createElement('textarea');ta.value=value;ta.style.cssText='position:fixed;opacity:0;left:-9999px;top:0';document.body.appendChild(ta);ta.select();try{copied=document.execCommand('copy')}catch(e){}ta.remove()}toast(copied?'Username скопирован':'Не удалось скопировать username')}
 function form(edit){
   F={img:edit?S.me.img:null,c:edit?S.me.c:0,k:edit?S.me.k:1,t:edit?[...(S.me.t||[])]:[]};
-  $('#ft').textContent=edit?'Моя анкета':'Создай анкету';
+  $('#ft').textContent=edit?'Моя анкета':'Создай анкету';$('#fbk').hidden=!edit;$('#fcheck').hidden=!edit;$('#fs').hidden=!!edit;$('#fs').textContent='Начать знакомиться';
   $('#fn').value=edit?S.me.n:'';$('#fa').value=edit?S.me.a:'';$('#fb').value=edit?S.me.b:'';
   $('#fd').innerHTML=D.map(d=>`<option ${edit&&S.me.d==d?'selected':''}>${d}</option>`).join('');
   fchips();fi();photo();go('form');
@@ -829,7 +834,7 @@ $('#likes-back').onclick=()=>go('feed');$('#likes-list').onclick=async e=>{const
 $('#bk').onclick=()=>{cur=null;go('chats')};$('#snd').onclick=send;
 $('#inp').onkeydown=e=>{if(e.key=='Enter')send()};
 $('#pf').onchange=e=>{const f=e.target.files[0];if(f)readPhoto(f,d=>{F.img=d;photo()})};
-$('#fs').onclick=submit;$('#ed').onclick=()=>form(1);
+$('#fs').onclick=submit;$('#fcheck').onclick=submit;$('#fbk').onclick=()=>go('prof');$('#ed').onclick=()=>form(1);
 $('#rs').onclick=()=>{if(confirm('Удалить анкету, лайки и чаты?')){try{localStorage.removeItem(K)}catch(e){}
   S=Object.assign(DF(),{email:S.email});form(0)}};
 const Q=['Привет! 👋','Кофе после пар? ☕','Какой корпус МИРЭА лучше? 🏢'];if(S.theme)document.documentElement.dataset.theme=S.theme==='light'||S.theme==='day'?'day':'night';tgColors();$('#ab').onclick=auth;$('#av').onclick=auth;$('#ac').onkeydown=e=>{if(e.key=='Enter')auth()};$('#lo').onclick=async()=>{try{await fetch('/api/auth/logout',{method:'POST',credentials:'same-origin'})}catch(e){}S=Object.assign(DF(),{out:1});save();authToken=null;$('#ac').value='';$('#ac').style.display='none';$('#av').style.display='none';$('#ab').textContent='Получить код в Telegram';$('#authhint').textContent='';go('auth')};for(let i=0;i<(matchMedia('(max-width:600px)').matches?7:14);i++){const s=document.createElement('span');s.className='fl';s.textContent=['♥','✦','♡','✧'][i%4];s.style.cssText=`left:${Math.random()*100}vw;font-size:${14+Math.random()*22}px;animation-duration:${14+Math.random()*16}s;animation-delay:-${Math.random()*20}s;color:var(--${i%2?'a':'b'})`;document.body.prepend(s)}var TG=window.Telegram&&Telegram.WebApp&&Telegram.WebApp.initData?Telegram.WebApp:null;
