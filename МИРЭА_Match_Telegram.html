@@ -713,11 +713,92 @@ button,.chip,.rb{touch-action:manipulation}
 #v-chat .msgs>.m .reply-quote span{display:block;overflow:hidden;font-size:12px;line-height:1.25;opacity:.8;text-overflow:ellipsis;white-space:nowrap}
 #v-chat .msgs>.m.reply-highlight{animation:replyHighlight .85s ease-out}
 @keyframes replyHighlight{0%,35%{box-shadow:0 0 0 3px rgba(255,192,155,.85)}100%{box-shadow:0 2px 4px rgba(25,35,70,.06)}}
+
+.desktop-stage{display:none}
+@media(min-width:1180px){
+  body{background:#100b0f!important;background-image:radial-gradient(ellipse at 18% 45%,rgba(112,48,56,.16),transparent 38%),radial-gradient(ellipse at 82% 55%,rgba(104,57,75,.14),transparent 40%),linear-gradient(115deg,#100b0f,#171015 52%,#100b0f)!important}
+  .desktop-stage{position:fixed;inset:0;z-index:0;display:block;overflow:hidden;pointer-events:none}
+  .desk-panel{--desk-w:clamp(270px,25vw,420px);position:absolute;top:50%;width:var(--desk-w);height:min(660px,72vh);min-height:520px;padding:30px;border:1px solid rgba(255,195,160,.15);border-radius:34px;background:linear-gradient(145deg,rgba(44,29,37,.93),rgba(25,16,22,.91));box-shadow:0 32px 90px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.035);backdrop-filter:blur(18px);transform:translateY(-50%);overflow:hidden}
+  .desk-left{left:calc(50% - 240px - 48px - clamp(270px,25vw,420px))}
+  .desk-right{right:calc(50% - 240px - 48px - clamp(270px,25vw,420px))}
+  .desk-left:before,.desk-right:before{content:'';position:absolute;width:240px;height:240px;border-radius:50%;filter:blur(70px);opacity:.22;pointer-events:none}
+  .desk-left:before{left:-100px;top:180px;background:#e67b69}
+  .desk-right:before{right:-110px;bottom:90px;background:#be6881}
+  .desk-head,.desk-footer,.desk-right-head,.desk-campus,.desk-interest-card,.desk-right-footer{position:relative;z-index:1}
+  .desk-head{display:flex;align-items:center;gap:11px}
+  .desk-logo{width:38px;height:38px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(135deg,#ffc09b,#ff9b83);color:#321a16;font-size:23px}
+  .desk-brand{display:grid;gap:2px}.desk-brand b{color:#fff1e8;font-size:11px;letter-spacing:.15em}.desk-brand small{color:#bca39a;font-size:9px;letter-spacing:.21em}
+  .desk-index{margin-left:auto;color:#846c68;font-size:10px;font-weight:800;letter-spacing:.12em}
+  .desk-copy{position:relative;z-index:1;margin-top:58px}
+  .desk-kicker,.desk-right-head{color:#ffc09b;font-size:10px;font-weight:850;letter-spacing:.17em}
+  .desk-copy h2{margin-top:15px;color:#fff0e8;font-size:clamp(31px,3vw,43px);line-height:1.08;letter-spacing:-1.7px}
+  .desk-copy h2 em{font-style:normal;color:#ffc09b}
+  .desk-copy p{max-width:300px;margin-top:15px;color:#b9a6a0;font-size:14px;line-height:1.6}
+  .desk-orbit{position:relative;height:225px;margin:10px -5px 4px}
+  .desk-ring{position:absolute;left:50%;top:47%;border:1px solid rgba(255,192,155,.13);border-radius:50%;transform:translate(-50%,-50%) rotate(-18deg)}
+  .desk-ring-one{width:230px;height:138px}.desk-ring-two{width:170px;height:208px;transform:translate(-50%,-50%) rotate(43deg)}
+  .desk-orbit-core{position:absolute;left:50%;top:47%;width:67px;height:67px;display:grid;place-items:center;border:1px solid rgba(255,226,207,.6);border-radius:23px;background:linear-gradient(145deg,#ffc09b,#e98879);box-shadow:0 0 44px rgba(255,145,110,.21);color:#321a16;font-size:34px;transform:translate(-50%,-50%) rotate(-8deg)}
+  .desk-orbit-dot{position:absolute;width:36px;height:36px;display:grid;place-items:center;border:1px solid rgba(255,195,160,.19);border-radius:13px;background:#30222a;color:#ffc09b;box-shadow:0 10px 25px rgba(0,0,0,.2);font-size:17px}
+  .desk-orbit-a{left:19%;top:27%}.desk-orbit-b{right:19%;top:24%}.desk-orbit-c{left:30%;bottom:6%}
+  .desk-orbit-caption{position:absolute;right:2%;bottom:15%;color:#8e7773;font-size:8px;line-height:1.8;letter-spacing:.12em}
+  .desk-orbit-caption b{color:#d8c1b7;font-size:9px}
+  .desk-campus{display:flex;align-items:center;gap:12px;padding:12px 13px;border:1px solid rgba(255,195,160,.12);border-radius:16px;background:rgba(255,255,255,.025)}
+  .desk-campus>span{width:32px;height:32px;display:grid;place-items:center;border-radius:11px;background:rgba(255,192,155,.1);color:#ffc09b;font-size:21px}
+  .desk-campus div{display:grid;gap:3px}.desk-campus b{color:#f4dfd6;font-size:11px;letter-spacing:.08em}.desk-campus small{color:#8e7773;font-size:8px;letter-spacing:.11em}
+  .desk-footer{position:absolute;left:30px;right:30px;bottom:23px;display:flex;justify-content:space-between;color:#806967;font-size:8px;font-weight:800;letter-spacing:.12em}
+  .desk-footer i{margin-left:5px;color:#ffc09b;font-style:normal}
+  .desk-right{padding:34px}
+  .desk-right-head{display:flex;align-items:center;justify-content:space-between}
+  .desk-spark{width:30px;height:30px;display:grid;place-items:center;border-radius:50%;background:rgba(255,192,155,.1);font-size:16px}
+  .desk-quote-mark{margin-top:65px;color:#ffc09b;font-family:Georgia,serif;font-size:76px;line-height:.7;opacity:.85}
+  .desk-right h2{position:relative;z-index:1;max-width:330px;margin:14px 0 0;color:#fff0e8;font-size:clamp(27px,2.6vw,37px);line-height:1.18;letter-spacing:-1.2px}
+  .desk-route{position:relative;height:190px;margin:25px 0 5px}
+  .desk-route-line{position:absolute;left:15%;right:13%;top:51%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,192,155,.45),rgba(255,192,155,.1),transparent);transform:rotate(-14deg)}
+  .desk-route-stop{position:absolute;width:42px;height:42px;display:grid;place-items:center;border:1px solid rgba(255,195,160,.21);border-radius:50%;background:#2e2028;color:#ffc09b;box-shadow:0 0 0 7px rgba(255,192,155,.035);font-size:18px}
+  .desk-stop-a{left:16%;top:30%}.desk-stop-b{left:48%;top:43%;width:54px;height:54px;background:linear-gradient(145deg,#ffc09b,#e98879);color:#321a16;font-size:27px}.desk-stop-c{right:15%;top:22%}
+  .desk-route-label{position:absolute;left:33%;bottom:7%;color:#8e7773;font-size:8px;font-weight:800;letter-spacing:.13em}.desk-route-label b{color:#ffc09b;font-size:13px}
+  .desk-interest-card{display:flex;align-items:center;gap:14px;padding:17px;border:1px solid rgba(255,195,160,.14);border-radius:20px;background:linear-gradient(120deg,rgba(255,192,155,.08),rgba(255,255,255,.025))}
+  .desk-interest-icon{width:42px;height:42px;display:grid;place-items:center;flex:none;border-radius:14px;background:rgba(255,192,155,.12);color:#ffc09b;font-size:22px}
+  .desk-interest-card div{display:grid;gap:7px}.desk-interest-card small{color:#a98c84;font-size:8px;font-weight:800;letter-spacing:.12em}.desk-interest-card b{color:#f8e5dc;font-size:14px;line-height:1.4}
+  .desk-right-footer{position:absolute;left:34px;right:34px;bottom:25px;display:flex;align-items:center;gap:13px;color:#a98d87;font-size:8px;line-height:1.8;font-weight:750;letter-spacing:.11em}
+  .desk-right-footer b{color:#e9cfc3}
+  .desk-footer-orb{width:41px;height:41px;display:grid;place-items:center;border:1px solid rgba(255,195,160,.2);border-radius:50%;color:#ffc09b;font-size:23px}
+  .fl{display:none}
+  :root[data-theme="day"] body{background:#f7e9e0!important;background-image:radial-gradient(ellipse at 18% 45%,rgba(238,159,130,.2),transparent 38%),radial-gradient(ellipse at 82% 55%,rgba(217,146,163,.18),transparent 40%),linear-gradient(115deg,#f6e9e3,#fff7f1 52%,#f6e9e3)!important}
+  :root[data-theme="day"] .desk-panel{border-color:rgba(150,80,50,.14);background:linear-gradient(145deg,rgba(255,250,246,.96),rgba(255,241,230,.93));box-shadow:0 32px 90px rgba(95,54,35,.13),inset 0 1px 0 #fff}
+  :root[data-theme="day"] .desk-brand b,:root[data-theme="day"] .desk-copy h2,:root[data-theme="day"] .desk-right h2{color:#432a25}
+  :root[data-theme="day"] .desk-brand small,:root[data-theme="day"] .desk-copy p,:root[data-theme="day"] .desk-campus small,:root[data-theme="day"] .desk-orbit-caption{color:#95776e}
+  :root[data-theme="day"] .desk-copy h2 em,:root[data-theme="day"] .desk-kicker,:root[data-theme="day"] .desk-right-head{color:#b65e44}
+  :root[data-theme="day"] .desk-campus,:root[data-theme="day"] .desk-interest-card{border-color:rgba(150,80,50,.12);background:rgba(255,255,255,.58)}
+  :root[data-theme="day"] .desk-campus b,:root[data-theme="day"] .desk-interest-card b{color:#52362e}
+  :root[data-theme="day"] .desk-ring{border-color:rgba(150,80,50,.14)}
+  :root[data-theme="day"] .desk-orbit-dot,:root[data-theme="day"] .desk-route-stop{background:#fff7f2;border-color:rgba(150,80,50,.16);color:#b65e44}
+  :root[data-theme="day"] .desk-orbit-core,:root[data-theme="day"] .desk-stop-b{background:linear-gradient(145deg,#ffc09b,#e98879);color:#432a25}
+  :root[data-theme="day"] .desk-footer,:root[data-theme="day"] .desk-right-footer,:root[data-theme="day"] .desk-orbit-caption b,:root[data-theme="day"] .desk-route-label{color:#95776e}
+}
+@media(min-width:1180px) and (max-height:700px){.desk-panel{height:calc(100vh - 70px);min-height:0;padding-top:22px;padding-bottom:22px}.desk-copy{margin-top:34px}.desk-orbit{height:170px;margin-top:0}.desk-quote-mark{margin-top:36px}.desk-route{height:150px;margin-top:15px}}
 </style>
 </head>
 <body>
 <div class="blob" style="background:var(--a);width:300px;height:300px;top:-90px;left:-90px"></div>
 <div class="blob" style="background:var(--b);width:280px;height:280px;bottom:-70px;right:-90px;animation-delay:-6s"></div>
+<div class="desktop-stage" aria-hidden="true">
+  <aside class="desk-panel desk-left">
+    <div class="desk-head"><span class="desk-logo">♥</span><span class="desk-brand"><b>RTU MIREA</b><small>CAMPUS MATCH</small></span><span class="desk-index">01 / 04</span></div>
+    <div class="desk-copy"><span class="desk-kicker">СВОЙ КРУГ УЖЕ РЯДОМ</span><h2>Твой кампус.<br><em>Твой круг.</em></h2><p>Знакомься с теми, кто учится, мечтает и живёт в тех же корпусах.</p></div>
+    <div class="desk-orbit"><span class="desk-ring desk-ring-one"></span><span class="desk-ring desk-ring-two"></span><span class="desk-orbit-core">♡</span><span class="desk-orbit-dot desk-orbit-a">♫</span><span class="desk-orbit-dot desk-orbit-b">✦</span><span class="desk-orbit-dot desk-orbit-c">☕</span><span class="desk-orbit-caption">ОБЩИЕ ИНТЕРЕСЫ<br><b>МУЗЫКА · КОФЕ · ПРОГУЛКИ</b></span></div>
+    <div class="desk-campus"><span>⌖</span><div><b>РТУ МИРЭА</b><small>МОСКВА · УНИВЕРСИТЕТСКАЯ СРЕДА</small></div></div>
+    <div class="desk-footer"><span>ЗНАКОМЬСЯ В СВОЁМ РИТМЕ</span><span>МИРЭА MATCH <i>✦</i></span></div>
+  </aside>
+  <aside class="desk-panel desk-right">
+    <div class="desk-right-head"><span>НАЧИНАЕТСЯ С ОБЩЕГО</span><span class="desk-spark">✦</span></div>
+    <div class="desk-quote-mark">“</div>
+    <h2>Иногда лучший мэтч — это общий маршрут после пар.</h2>
+    <div class="desk-route"><span class="desk-route-line"></span><span class="desk-route-stop desk-stop-a">♫</span><span class="desk-route-stop desk-stop-b">♡</span><span class="desk-route-stop desk-stop-c">☕</span><span class="desk-route-label">ВЕРНАДСКОГО <b>↗</b></span></div>
+    <div class="desk-interest-card"><span class="desk-interest-icon">✧</span><div><small>ВАШИ ИНТЕРЕСЫ МОГУТ СОВПАСТЬ</small><b>Один кампус.<br>Тысячи историй.</b></div></div>
+    <div class="desk-right-footer"><span class="desk-footer-orb">♡</span><span>УЧЁБА ЗНАКОМИТ.<br><b>ДАЛЬШЕ — ВАША ИСТОРИЯ.</b></span></div>
+  </aside>
+</div>
 <div id="app" class="nonav">
 <header class="top"><div class="logo"><span class="hb">♥</span>МИРЭА Match</div></header>
 <main>
