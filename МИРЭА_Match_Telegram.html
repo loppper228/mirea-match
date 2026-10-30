@@ -456,6 +456,24 @@ button,.chip,.rb{touch-action:manipulation}
 .nav button.on:not([data-v="feed"]){background:transparent;color:#ffc09b}
 .nav button.on:not([data-v="feed"]) i{background:transparent;box-shadow:none;transform:none}
 @media(max-width:360px){.filterbar{font-size:14px}.nav button[data-v="feed"] i{width:49px;height:49px}}
+
+/* Feed action motion v1 */
+@keyframes feedControlIn{0%{opacity:0;transform:translateY(11px) scale(.92)}72%{opacity:1;transform:translateY(-2px) scale(1.035)}100%{opacity:1;transform:translateY(0) scale(1)}}
+#v-feed.on .acts .rb{animation:feedControlIn .34s cubic-bezier(.2,.8,.2,1) both;transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .2s ease}
+#v-feed.on .acts .rb:nth-child(1){animation-delay:.02s}
+#v-feed.on .acts .rb:nth-child(2){animation-delay:.06s}
+#v-feed.on .acts .rb:nth-child(3){animation-delay:.10s}
+#v-feed.on .acts .rb:nth-child(4){animation-delay:.14s}
+#v-feed .acts .rb:hover{transform:translateY(-3px) scale(1.04)}
+#v-feed .acts .rb:active{transform:translateY(1px) scale(.9);box-shadow:0 2px 8px rgba(0,0,0,.22)}
+#v-feed .acts .rb.no:active{transform:translateY(1px) scale(.9) rotate(9deg);color:#ff8978}
+#v-feed .acts .rb.st:active{transform:translateY(1px) scale(.9) rotate(12deg);color:#ffd36f}
+#v-feed .acts .rb.yes:active{transform:translateY(1px) scale(.9) rotate(-8deg);box-shadow:0 3px 12px rgba(255,145,110,.3)}
+.nav button[data-v="feed"]{transition:transform .22s cubic-bezier(.2,.8,.2,1),color .22s ease}
+.nav button[data-v="feed"]:active{transform:translateY(-12px) scale(.95)}
+.nav button[data-v="feed"] i{transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .22s ease}
+.nav button[data-v="feed"]:active i{transform:scale(.92)}
+@media(prefers-reduced-motion:reduce){#v-feed.on .acts .rb{animation:none}}
 </style>
 </head>
 <body>
