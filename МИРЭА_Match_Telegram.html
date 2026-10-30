@@ -429,6 +429,33 @@ button,.chip,.rb{touch-action:manipulation}
 @media(max-height:720px){.deck{min-height:130px}.info{padding:14px}.info h2{font-size:25px}.tags{margin:7px 0}.acts{padding:6px 0 8px}.rb.yes{width:66px;height:66px}}
 @media(min-width:600px){#app{max-width:520px}.view{padding-left:20px;padding-right:20px}}
 
+
+/* Reference design: compact filter control, sheet, and raised center feed tab. */
+.filterbar{width:100%;flex:none;display:flex;align-items:center;gap:12px;padding:14px 16px;margin:9px 1px 8px;border-radius:22px;background:#241a23;border:1px solid rgba(255,190,160,.16);color:#fff0e7;text-align:left;font-size:15px;font-weight:750;box-shadow:0 4px 14px rgba(0,0,0,.12)}
+.filterbar>svg:first-child{width:21px;height:21px;flex:none;fill:none;stroke:#ffc09b;stroke-width:2.2;stroke-linecap:round}
+.filterbar #filter-label{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.filterbar .filter-chevron{width:20px;height:20px;flex:none;fill:none;stroke:#f3d8ca;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.filterbar:active{transform:scale(.99)}
+.filter-sheet{position:fixed;inset:0;z-index:40;display:none;align-items:flex-end;justify-content:center}
+.filter-sheet.on{display:flex;animation:up .2s ease-out}
+.filter-backdrop{position:absolute;inset:0;width:100%;height:100%;background:rgba(8,5,8,.68);backdrop-filter:blur(5px)}
+.filter-panel{position:relative;width:min(100%,520px);max-height:82%;overflow-y:auto;padding:20px 18px calc(18px + env(safe-area-inset-bottom,0px));border-radius:26px 26px 0 0;background:#211922;border:1px solid rgba(255,195,160,.16);box-shadow:0 -16px 45px rgba(0,0,0,.36)}
+.filter-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;color:#fff0e7;font-size:19px}
+.filter-x{width:34px;height:34px;border-radius:50%;background:#34252e;color:#ffd0ad;font-size:24px;line-height:1}
+.filter-caption{display:block;margin:16px 0 7px;color:#b9a6a0;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+.filter-panel .chips{flex-wrap:wrap;overflow:visible;padding:0;gap:7px}
+.filter-panel .chip{padding:9px 12px;font-size:12px}
+.filter-apply{width:100%;margin-top:20px;padding:14px;border-radius:15px;background:#ffc09b;color:#321a16;font-weight:800}
+.filter-sheet.on .filter-panel{animation:filterUp .25s cubic-bezier(.2,.8,.2,1)}
+@keyframes filterUp{from{transform:translateY(24px);opacity:.7}to{transform:none;opacity:1}}
+.nav{position:relative;z-index:2;min-height:76px;align-items:flex-end;overflow:visible;padding-top:7px}
+.nav button[data-v="feed"]{position:relative;z-index:3;overflow:visible;transform:translateY(-16px);color:#ffd0ad}
+.nav button[data-v="feed"] i{width:54px;height:54px;margin-top:-20px;border-radius:50%;background:#ffc09b;color:#321a16;box-shadow:0 5px 18px rgba(255,145,110,.22);transform:none}
+.nav button[data-v="feed"] i svg{stroke:#321a16}
+.nav button[data-v="feed"] span{font-weight:800}
+.nav button.on:not([data-v="feed"]){background:transparent;color:#ffc09b}
+.nav button.on:not([data-v="feed"]) i{background:transparent;box-shadow:none;transform:none}
+@media(max-width:360px){.filterbar{font-size:14px}.nav button[data-v="feed"] i{width:49px;height:49px}}
 </style>
 </head>
 <body>
@@ -437,7 +464,7 @@ button,.chip,.rb{touch-action:manipulation}
 <div id="app" class="nonav">
 <header class="top"><div class="logo"><span class="hb">♥</span>МИРЭА Match</div></header>
 <main>
-<section class='view' id='v-auth'><div class='auth'><div class='big'>✈️</div><h1>Вход через Telegram</h1><p style='color:var(--mut);margin:6px 0 20px'>Нажми кнопку, открой нашего бота и нажми Start — он пришлёт код для входа.</p><button class='btn' id='ab'>Получить код в Telegram</button><input class='fld' id='ac' inputmode='numeric' maxlength='6' placeholder='Код из Telegram' style='margin-top:12px;display:none;text-align:center;letter-spacing:6px;font-size:20px'><div style='height:14px'></div><button class='ghost' id='av' style='display:none'>Подтвердить код</button><p id='authhint' style='color:var(--mut);margin-top:12px;font-size:13px'></p></div></section><section class="view" id="v-feed"><div class='chips' id='flt'></div><div class='chips' id='flk' style='padding-top:0'></div><div class="deck" id="deck"></div>
+<section class='view' id='v-auth'><div class='auth'><div class='big'>✈️</div><h1>Вход через Telegram</h1><p style='color:var(--mut);margin:6px 0 20px'>Нажми кнопку, открой нашего бота и нажми Start — он пришлёт код для входа.</p><button class='btn' id='ab'>Получить код в Telegram</button><input class='fld' id='ac' inputmode='numeric' maxlength='6' placeholder='Код из Telegram' style='margin-top:12px;display:none;text-align:center;letter-spacing:6px;font-size:20px'><div style='height:14px'></div><button class='ghost' id='av' style='display:none'>Подтвердить код</button><p id='authhint' style='color:var(--mut);margin-top:12px;font-size:13px'></p></div></section><section class="view" id="v-feed"><button class="filterbar" id="filter-toggle" aria-label="Открыть фильтры"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10m-7 6h4"/></svg><span id="filter-label">Все корпуса · Все курсы</span><svg class="filter-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button><div class="deck" id="deck"></div>
 <div class='acts'><button class='rb sm' id='bu'>↩</button><button class='rb no' id='bn'>✕</button><button class='rb st sm' id='bs'>⭐</button><button class='rb yes' id='by'>♥</button></div></section>
 <section class="view" id="v-chats"><h3 class="h">Чаты</h3><div id="list"></div></section>
 <section class="view" id="v-chat"><div class="chead"><button class="back" id="bk">←</button><div id="chav"></div><b id="chn"></b></div>
@@ -456,7 +483,7 @@ button,.chip,.rb{touch-action:manipulation}
 <span class='lbl'>Интересы (до 3)</span><div class='grid' id='fi'></div><span class="lbl">О себе</span><textarea class="fld" id="fb" maxlength="200" placeholder="Чем увлекаешься, кого ищешь…"></textarea>
 <div style="height:18px"></div><button class="btn" id="fs">Начать знакомиться</button></div></section>
 </main>
-<nav class="nav"><button data-v="feed" class="on"><i><svg viewBox='0 0 24 24'><path d='M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1.1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3a2.5 2.5 0 0 0 2.5 2.5z'/></svg></i><span>Лента</span></button><button data-v="likes-received"><i><svg viewBox='0 0 24 24'><path d='M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7z'/></svg></i><span>Лайки</span></button><button data-v="matches"><i><svg viewBox='0 0 24 24'><path d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'/><circle cx='9' cy='7' r='4'/><path d='M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8'/></svg></i><span>Мэтчи</span></button><button data-v="chats"><i><svg viewBox='0 0 24 24'><path d='M7.9 20A9 9 0 1 0 4 16.1L2 22z'/></svg></i><span>Чаты</span><span class="bd" id="bd" hidden></span></button><button data-v="prof"><i><svg viewBox='0 0 24 24'><path d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg></i><span>Профиль</span></button></nav>
+<nav class="nav"><button data-v="likes-received"><i><svg viewBox='0 0 24 24'><path d='M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7z'/></svg></i><span>Лайки</span></button><button data-v="matches"><i><svg viewBox='0 0 24 24'><path d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'/><circle cx='9' cy='7' r='4'/><path d='M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8'/></svg></i><span>Мэтчи</span></button><button data-v="feed" class="on"><i><svg viewBox='0 0 24 24'><path d='M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1.1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3a2.5 2.5 0 0 0 2.5 2.5z'/></svg></i><span>Лента</span></button><button data-v="chats"><i><svg viewBox='0 0 24 24'><path d='M7.9 20A9 9 0 1 0 4 16.1L2 22z'/></svg></i><span>Чаты</span><span class="bd" id="bd" hidden></span></button><button data-v="prof"><i><svg viewBox='0 0 24 24'><path d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg></i><span>Профиль</span></button></nav><div class="filter-sheet" id="filter-sheet" aria-hidden="true"><button class="filter-backdrop" data-filter-close aria-label="Закрыть фильтры"></button><div class="filter-panel" role="dialog" aria-modal="true" aria-labelledby="filter-title"><div class="filter-head"><b id="filter-title">Фильтры ленты</b><button class="filter-x" data-filter-close aria-label="Закрыть">×</button></div><span class="filter-caption">Корпус</span><div class="chips" id="flt"></div><span class="filter-caption">Курс</span><div class="chips" id="flk"></div><button class="filter-apply" id="filters-done">Показать анкеты</button></div></div>
 </div>
 <div id="mo"></div>
 <script>
@@ -489,10 +516,11 @@ function badge(){const n=Object.keys(S.unread).length;$('#bd').hidden=!n;$('#bd'
 async function refreshProfiles(){
   try{const r=await fetch('/api/profiles',{credentials:'same-origin',cache:'no-store'});if(!r.ok)throw new Error('Не удалось загрузить анкеты');const d=await r.json();P=Array.isArray(d.profiles)?d.profiles:[];}catch(e){P=[];toast('Не удалось загрузить анкеты. Проверь подключение к серверу.');}
 }
+function updateFilterLabel(){const campus=flt<0?'Все корпуса':C[flt],course=fk?fk+' курс':'Все курсы',el=$('#filter-label');if(el)el.textContent=campus+' · '+course;}
 async function feed(force){
   if(force||!P.length)await refreshProfiles();
   $('#flt').innerHTML=['Все корпуса',...C].map((t,i)=>`<button class="chip ${flt==i-1?'on':''}" data-i="${i-1}">${t}</button>`).join('');
-  $('#flk').innerHTML=['Все курсы',1,2,3,4,5,6].map((k,i)=>`<button class='chip ${fk==i?'on':''}' data-k2='${i}'>${i?k+' курс':k}</button>`).join('');const q=P.filter(p=>!S.seen.includes(p.id)&&(flt<0||p.c==flt)&&(!fk||p.k==fk)),d=$('#deck');d.innerHTML='';
+  $('#flk').innerHTML=['Все курсы',1,2,3,4,5,6].map((k,i)=>`<button class='chip ${fk==i?'on':''}' data-k2='${i}'>${i?k+' курс':k}</button>`).join('');updateFilterLabel();const q=P.filter(p=>!S.seen.includes(p.id)&&(flt<0||p.c==flt)&&(!fk||p.k==fk)),d=$('#deck');d.innerHTML='';
   if(!q.length){d.innerHTML='<div class="empty"><b>🔒</b><div>Пока нет реальных анкет авторизованных пользователей.<br>Демо-анкеты отключены.</div></div>';return}
   q.slice(0,3).reverse().forEach((p,j,a)=>{const i=a.length-1-j,el=document.createElement('div');
     el.className='card'+(i==0?' pop':'');el.dataset.id=p.id;el.innerHTML=card(p);
@@ -624,6 +652,7 @@ document.addEventListener('click',e=>{
   else if(t.classList.contains('row'))openChat(+t.dataset.id);else if(t.dataset.mid)openChat(+t.dataset.mid);
   else if(t.id=='rp'){S.seen=S.matches.slice();save();feed()}else if(t.dataset.k2!==undefined){fk=+t.dataset.k2;feed()}else if(t.dataset.t!==undefined){const v=t.dataset.t;F.t=F.t.includes(v)?F.t.filter(x=>x!=v):F.t.length<3?[...F.t,v]:F.t;fi()}else if(t.dataset.q!==undefined){+t.dataset.q==3?(S.tg?send('Мой Telegram: @'+S.tg):toast('Сначала привяжи Telegram в личном кабинете')):send(Q[+t.dataset.q])}else if(t.dataset.sw){if(t.dataset.sw=='share')S.share=S.share?0:1;else{const d=!isDark();document.documentElement.dataset.theme=S.theme=d?'night':'day';tgColors()}save();prof()}else if(t.id=='tb')tgBind();else if(t.id=='tu'){S.tg='';save();tgv()}
 });
+$('#filter-toggle').onclick=()=>{const x=$('#filter-sheet');x.classList.add('on');x.setAttribute('aria-hidden','false')};$('#filters-done').onclick=()=>{const x=$('#filter-sheet');x.classList.remove('on');x.setAttribute('aria-hidden','true')};$('#filter-sheet').addEventListener('click',e=>{if(e.target.closest('[data-filter-close]')){$('#filter-sheet').classList.remove('on');$('#filter-sheet').setAttribute('aria-hidden','true')}});
 $('#likes-back').onclick=()=>go('feed');$('#likes-list').onclick=async e=>{const b=e.target.closest('[data-like-open]');if(!b||b.disabled)return;const id=+b.dataset.likeOpen;b.disabled=true;try{const r=await fetch('/api/likes',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({profileId:id})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось поставить лайк');if(!S.seen.includes(id))S.seen.push(id);save();b.textContent='Мэтч ✓';const p=person(id);if(d.mutual&&p)match(p,d.mutualUsername)}catch(err){b.disabled=false;toast(err.message)}};$('#bn').onclick=()=>swipe(0);$('#by').onclick=()=>swipe(1);$('#bs').onclick=()=>S.sl>0?swipe(1,1):toast('Суперлайки закончились ⭐');$('#bu').onclick=()=>{const id=S.hist.slice(-1)[0];if(!id||S.matches.includes(id))return toast('Нечего возвращать ↩');S.hist.pop();S.seen=S.seen.filter(x=>x!=id);save();flt=-1;fk=0;feed()};
 $('#bk').onclick=()=>{cur=null;go('chats')};$('#snd').onclick=send;
 $('#inp').onkeydown=e=>{if(e.key=='Enter')send()};
