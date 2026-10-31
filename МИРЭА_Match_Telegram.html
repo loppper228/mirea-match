@@ -287,11 +287,11 @@ body{font-family:"Inter","SF Pro Text",system-ui,-apple-system,"Segoe UI",Roboto
 .nav button.on i{background:var(--pg);box-shadow:var(--glow);transform:translateY(-2px)}
 .nav button.on i svg{stroke:var(--on)}
 .nav button[data-v="likes-received"].on i svg{stroke:#ff1744;fill:rgba(255,23,68,.32);filter:drop-shadow(0 0 8px rgba(255,23,68,.48))}
-.nav button[data-v="matches"].on i svg{stroke:#ffd166;filter:drop-shadow(0 0 7px rgba(255,209,102,.45))}
-.nav button[data-v="matches"].on i svg circle{fill:rgba(255,209,102,.2)}
-.nav button[data-v="chats"].on i svg{stroke:#35d9e8;fill:rgba(53,217,232,.12);filter:drop-shadow(0 0 7px rgba(53,217,232,.42))}
-.nav button[data-v="prof"].on i svg{stroke:#61e29b;filter:drop-shadow(0 0 7px rgba(97,226,155,.42))}
-.nav button[data-v="prof"].on i svg circle{fill:rgba(97,226,155,.2)}
+.nav button[data-v="matches"].on i svg{stroke:var(--a);filter:drop-shadow(0 0 7px color-mix(in srgb,var(--a) 48%,transparent));transition:stroke .25s,filter .25s}
+.nav button[data-v="matches"].on i svg circle{fill:color-mix(in srgb,var(--a) 22%,transparent)}
+.nav button[data-v="chats"].on i svg{stroke:var(--b);fill:color-mix(in srgb,var(--b) 13%,transparent);filter:drop-shadow(0 0 7px color-mix(in srgb,var(--b) 45%,transparent));transition:stroke .25s,fill .25s,filter .25s}
+.nav button[data-v="prof"].on i svg{stroke:color-mix(in srgb,var(--a) 55%,var(--b));filter:drop-shadow(0 0 7px color-mix(in srgb,var(--a) 30%,var(--b)));transition:stroke .25s,filter .25s}
+.nav button[data-v="prof"].on i svg circle{fill:color-mix(in srgb,var(--a) 35%,var(--b) 18%)}
 .bd{top:-3px;right:calc(50% - 32px);background:var(--b);color:#fff;border:2px solid var(--card);font-weight:800}
 /* cards */
 .card{border-radius:30px;border:1px solid var(--line);box-shadow:var(--sh)}
