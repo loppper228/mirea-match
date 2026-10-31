@@ -11,7 +11,7 @@ const BOT_USERNAME = (process.env.BOT_USERNAME || '').replace(/^@/, '');
 const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 const HTML_FILE = path.join(__dirname, 'МИРЭА_Match_Telegram.html');
 const ADMIN_HTML_FILE = path.join(__dirname, 'admin.html');
-const ADMIN_IDS = new Set(String(process.env.ADMIN_TELEGRAM_IDS || '').split(',').map(x=>x.trim()).filter(x=>/^\\d+$/.test(x)).map(x=>'tg:'+x));
+const ADMIN_IDS = new Set(String(process.env.ADMIN_TELEGRAM_IDS || '').split(',').map(x=>x.trim()).filter(x=>/^\d+$/.test(x)).map(x=>'tg:'+x));
 let HTML, HTML_GZ, HTML_ETAG, ADMIN_HTML;
 function loadHtml(){HTML=fs.readFileSync(HTML_FILE);HTML_GZ=zlib.gzipSync(HTML,{level:9});HTML_ETAG='"'+crypto.createHash('sha1').update(HTML).digest('hex')+'"';ADMIN_HTML=fs.readFileSync(ADMIN_HTML_FILE);}
 loadHtml();
