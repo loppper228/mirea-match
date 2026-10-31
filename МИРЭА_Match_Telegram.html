@@ -1186,7 +1186,7 @@ async function auth(){
       hint.textContent='Открой Telegram-бота по ссылке и нажми Start. После этого введи полученный код.';
       window.open(data.bot_url,'_blank','noopener');
       $('#ab').textContent='Подтвердить код';
-    }catch(e){hint.textContent=e.message+' Убедись, что сайт запущен через сервер из комплекта, а не как локальный HTML-файл.'}
+    }catch(e){hint.textContent=e.message}
     return;
   }
   const code=$('#ac').value.trim();
