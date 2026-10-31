@@ -1161,7 +1161,7 @@ function tgColors(){if(!TG)return;try{const c=isDark()?'#150f12':'#fff1e6';TG.se
 if(TG){document.documentElement.classList.add('tma');try{TG.ready();TG.expand();TG.disableVerticalSwipes&&TG.disableVerticalSwipes();TG.BackButton.onClick(()=>$('#bk').click())}catch(e){}tgColors()}
 const hap=(k,t)=>{try{TG&&(k==='n'?TG.HapticFeedback.notificationOccurred(t):TG.HapticFeedback.impactOccurred(t))}catch(e){}};
 const _go=go;go=v=>{_go(v);if(TG)try{v==='chat'?TG.BackButton.show():TG.BackButton.hide()}catch(e){}};
-const _sw=swipe;swipe=(y,s)=>{hap('i',y?'medium':'light');return _sw(y,s)};
+const _sw=swipe;swipe=(y,s,note)=>{hap('i',y?'medium':'light');return _sw(y,s,note)};
 const _mt=match;match=(p,u)=>{hap('n','success');return _mt(p,u)};
 document.addEventListener('click',e=>{const a=e.target.closest('a[href^="https://t.me/"]');if(a&&TG&&TG.openTelegramLink){e.preventDefault();TG.openTelegramLink(a.href)}});
 function updateChatUnread(chats){const counts=new Map((chats||[]).map(p=>[String(p.id),Number(p.unread)||0]));document.querySelectorAll('[data-chat-unread]').forEach(el=>{const n=counts.get(el.dataset.chatUnread)||0;el.hidden=!n;el.textContent=n?(n>99?'99+':String(n)):'';el.setAttribute('aria-label',n+' непрочитанных сообщений')});(chats||[]).forEach(p=>{const el=document.querySelector('[data-chat-preview="'+p.id+'"]');if(el)el.innerHTML=(p.lastMine?'<span class="receipt '+(p.lastRead?'read':'')+'">'+(p.lastRead?'✓✓':'✓')+'</span>':'')+esc(p.lastMessage||'Напиши первым')})}
