@@ -971,6 +971,12 @@ button,.chip,.rb{touch-action:manipulation}
 #v-prof .profile-delete:hover{background:color-mix(in srgb,#e47771 12%,var(--card));border-color:color-mix(in srgb,#e47771 46%,var(--line));color:#e16868}
 :root[data-theme="day"] #v-prof .profile-delete{background:color-mix(in srgb,#bd5149 4%,var(--card));color:#b64c52}
 :root[data-theme="day"] #v-prof .profile-delete:hover{background:color-mix(in srgb,#bd5149 9%,var(--card));color:#a93e46}
+
+#v-form .edit-delete{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:10px 0 22px;padding:12px 14px;border:1px solid color-mix(in srgb,#e47771 28%,var(--line));border-radius:14px;background:color-mix(in srgb,#e47771 5%,var(--card));color:#d97570;font-size:13px;font-weight:750;transition:background-color .18s,border-color .18s,color .18s}
+#v-form .edit-delete[hidden]{display:none!important}
+#v-form .edit-delete svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+#v-form .edit-delete:hover{background:color-mix(in srgb,#e47771 12%,var(--card));border-color:color-mix(in srgb,#e47771 46%,var(--line));color:#e16868}
+:root[data-theme="day"] #v-form .edit-delete{background:color-mix(in srgb,#bd5149 4%,var(--card));color:#b64c52}
 </style>
 </head>
 <body>
@@ -1026,7 +1032,7 @@ button,.chip,.rb{touch-action:manipulation}
 <section class="edit-section"><div class="edit-section-head"><span class="edit-step">02</span><div><h2>Учёба</h2><small>Поможет найти своих</small></div></div><span class="edit-label">Корпус</span><div class="grid edit-chips" id="fc"></div><label class="edit-field edit-direction"><span>Направление</span><select class="fld" id="fd"></select></label><span class="edit-label">Курс</span><div class="grid edit-chips" id="fk"></div></section>
 <section class="edit-section"><div class="edit-section-head"><span class="edit-step">03</span><div><h2>Интересы</h2><small>Выбери до трёх</small></div></div><div class="grid edit-chips" id="fi"></div></section>
 <section class="edit-section edit-about"><div class="edit-section-head"><span class="edit-step">04</span><div><h2>О себе</h2><small>Что тебе нравится?</small></div></div><textarea class="fld" id="fb" maxlength="200" placeholder="Расскажи о своих увлечениях, любимых местах или идеальном выходном…"></textarea><div class="bio-count" id="bio-count">0 / 200</div></section>
-<button class="btn" id="fs">Начать знакомиться</button></div></section>
+<button class="btn" id="fs">Начать знакомиться</button><button type='button' class='edit-delete' id='rs-edit' hidden><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M4 7h16'/><path d='M10 11v6M14 11v6'/><path d='m6 7 1 14h10l1-14M9 7V4h6v3'/></svg><span>Удалить анкету</span></button></div></section>
 </main>
 <div class="safety-overlay" id="safety-overlay" hidden>
   <div class="safety-sheet" role="dialog" aria-modal="true" aria-labelledby="safety-title">
@@ -1200,7 +1206,7 @@ function prof(){$('#pav').innerHTML=av(S.me,'big profile-avatar');$('#pn').textC
 async function copyTelegramUsername(){const pm=$('#pm'),value=pm.textContent;let copied=false;try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(value);copied=true}}catch(e){}if(!copied){const ta=document.createElement('textarea');ta.value=value;ta.style.cssText='position:fixed;opacity:0;left:-9999px;top:0';document.body.appendChild(ta);ta.select();try{copied=document.execCommand('copy')}catch(e){}ta.remove()}toast(copied?'Username скопирован':'Не удалось скопировать username')}
 function form(edit){
   F={img:edit?S.me.img:null,c:edit?S.me.c:0,k:edit?S.me.k:1,t:edit?[...(S.me.t||[])]:[]};
-  $('#ft').textContent=edit?'Редактирование анкеты':'Создай анкету';$('#form-intro').textContent=edit?'Обнови детали — они появятся в твоей анкете.':'Знакомства только для студентов РТУ МИРЭА';$('#fbk').hidden=!edit;$('#fs').hidden=false;$('#fs').textContent=edit?'Сохранить изменения':'Начать знакомиться';
+  $('#ft').textContent=edit?'Редактирование анкеты':'Создай анкету';$('#form-intro').textContent=edit?'Обнови детали — они появятся в твоей анкете.':'Знакомства только для студентов РТУ МИРЭА';$('#fbk').hidden=!edit;$('#rs-edit').hidden=!edit;$('#fs').hidden=false;$('#fs').textContent=edit?'Сохранить изменения':'Начать знакомиться';
   $('#fn').value=edit?S.me.n:'';$('#fa').value=edit?S.me.a:'';$('#fb').value=edit?S.me.b:'';updateBioCount();
   $('#fd').innerHTML=D.map(d=>`<option ${edit&&S.me.d==d?'selected':''}>${d}</option>`).join('');
   fchips();fi();photo();go('form');
@@ -1247,7 +1253,7 @@ $('#report-options').onclick=e=>{const b=e.target.closest('[data-report-reason]'
 $('#inp').onkeydown=e=>{if(e.key=='Enter')send()};
 $('#pf').onchange=e=>{const f=e.target.files[0];if(f)readPhoto(f,d=>{F.img=d;photo()})};$('#fb').oninput=updateBioCount;
 $('#fs').onclick=submit;$('#fbk').onclick=()=>go('prof');$('#ed').onclick=()=>form(1);
-$('#rs').onclick=async()=>{if(!confirm('Удалить анкету, лайки, мэтчи и чаты? Это действие нельзя отменить.'))return;try{const r=await fetch('/api/profiles/me',{method:'DELETE',credentials:'same-origin',cache:'no-store'}),d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось удалить анкету');try{localStorage.removeItem(K)}catch(e){}const account=S.email,username=S.telegramUsername,theme=S.theme;S=Object.assign(DF(),{email:account,telegramUsername:username,theme});P=[];chatProfiles=[];cur=null;save();toast('Анкета, лайки, мэтчи и чаты удалены');form(0)}catch(e){toast(e.message||'Не удалось удалить анкету')}};
+async function deleteProfile(){if(!confirm('Удалить анкету, лайки, мэтчи и чаты? Это действие нельзя отменить.'))return;try{const r=await fetch('/api/profiles/me',{method:'DELETE',credentials:'same-origin',cache:'no-store'}),d=await r.json();if(!r.ok)throw new Error(d.error||'Не удалось удалить анкету');try{localStorage.removeItem(K)}catch(e){}const account=S.email,username=S.telegramUsername,theme=S.theme;S=Object.assign(DF(),{email:account,telegramUsername:username,theme});P=[];chatProfiles=[];cur=null;save();toast('Анкета, лайки, мэтчи и чаты удалены');form(0)}catch(e){toast(e.message||'Не удалось удалить анкету')}}$('#rs').onclick=deleteProfile;$('#rs-edit').onclick=deleteProfile;
 const Q=['Привет! 👋','Кофе после пар? ☕','Какой корпус МИРЭА лучше? 🏢'];if(S.theme)document.documentElement.dataset.theme=S.theme==='light'?'day':S.theme==='dark'?'night':S.theme;tgColors();$('#ab').onclick=auth;$('#av').onclick=auth;$('#ac').onkeydown=e=>{if(e.key=='Enter')auth()};$('#lo').onclick=async()=>{try{await fetch('/api/auth/logout',{method:'POST',credentials:'same-origin'})}catch(e){}S=Object.assign(DF(),{out:1});save();authToken=null;$('#ac').value='';$('#ac').style.display='none';$('#av').style.display='none';$('#ab').textContent='Получить код в Telegram';$('#authhint').textContent='';go('auth')};for(let i=0;i<(matchMedia('(max-width:600px)').matches?7:14);i++){const s=document.createElement('span');s.className='fl';s.textContent=['♥','✦','♡','✧'][i%4];s.style.cssText=`left:${Math.random()*100}vw;font-size:${14+Math.random()*22}px;animation-duration:${14+Math.random()*16}s;animation-delay:-${Math.random()*20}s;color:var(--${i%2?'a':'b'})`;document.body.prepend(s)}var TG=window.Telegram&&Telegram.WebApp&&Telegram.WebApp.initData?Telegram.WebApp:null;
 function tgColors(){if(!TG)return;try{const c=isDark()?'#150f12':'#fff1e6';TG.setHeaderColor(c);TG.setBackgroundColor(c);TG.setBottomBarColor&&TG.setBottomBarColor(isDark()?'#211820':'#fffaf6')}catch(e){}}
 if(TG){document.documentElement.classList.add('tma');try{TG.ready();TG.expand();TG.disableVerticalSwipes&&TG.disableVerticalSwipes();TG.BackButton.onClick(()=>$('#bk').click())}catch(e){}tgColors()}
