@@ -938,8 +938,9 @@ button,.chip,.rb{touch-action:manipulation}
 #v-premium .premium-page-card .profile-premium-icon svg{display:block;margin:auto;flex:none}
 
 #v-prof .profile-head-actions{display:flex;align-items:center;gap:8px;flex:none}
-#v-prof .profile-settings-toggle{width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line);border-radius:13px;background:var(--card);color:var(--mut);transition:background .18s,color .18s,transform .18s}
-#v-prof .profile-settings-toggle svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#v-prof .profile-settings-toggle{width:40px;height:40px;display:grid;place-items:center;border:1px solid color-mix(in srgb,var(--a) 32%,var(--line));border-radius:13px;background:color-mix(in srgb,var(--a) 10%,var(--card));color:var(--a);transition:background .18s,color .18s,transform .18s,box-shadow .18s}
+#v-prof .profile-settings-toggle svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#v-prof .profile-settings-toggle:hover{background:color-mix(in srgb,var(--a) 18%,var(--card));transform:translateY(-1px);box-shadow:0 5px 15px color-mix(in srgb,var(--a) 16%,transparent)}
 #v-prof .profile-settings-toggle.on{background:color-mix(in srgb,var(--a) 14%,var(--card));color:var(--a);border-color:color-mix(in srgb,var(--a) 35%,var(--line))}
 #v-prof .profile-settings-toggle:active{transform:scale(.95)}
 #v-prof .profile-quick-settings{padding:14px 16px;margin:-3px 0 12px;border:1px solid var(--line);border-radius:18px;background:var(--card);box-shadow:var(--sh);animation:up .18s ease-out}
